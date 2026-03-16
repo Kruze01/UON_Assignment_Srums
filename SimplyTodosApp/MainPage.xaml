@@ -3,31 +3,52 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SimplyTodosApp.MainPage">
 
-    <Grid RowDefinitions="Auto, *" ColumnDefinitions="*">
-
-        <Grid Grid.Row="0" ColumnDefinitions="120,*,50" HeightRequest="50" Margin="0,0,0,10">
-            <Label Grid.Column="0" BackgroundColor="Gold" Text="10-March-2026" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="Black" />
-            <Label Grid.Column="1" BackgroundColor="DeepSkyBlue" Text="Simply To-Dos" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" />
-            <ImageButton Grid.Column="2" BackgroundColor="MidnightBlue" Source="dotnet_bot.png" Aspect="AspectFit" />
+    <Grid RowDefinitions="75, 50, *"
+          RowSpacing="10">
+        
+        <Grid ColumnDefinitions="85,*,50" BackgroundColor="GhostWhite">
+            <Label Grid.Column="0" Text="16-March-2026" VerticalOptions="Center" HorizontalOptions="Center" FontSize="12"></Label>
+            <Label Grid.Column="1" Text="Simply To-dos" VerticalOptions="Center" HorizontalOptions="Center" FontSize="15" FontAttributes="Bold"></Label>
+            <Image Grid.Column="2" Source="dotnet_bot.png"></Image>
         </Grid>
 
+        <Grid ColumnDefinitions="*,*" Grid.Row="1">
+            <Button x:Name="todosBtn" BackgroundColor="Gray" Grid.Column="0" Clicked="todosBtn_Clicked" Text="To-dos" TextColor="White"></Button>
+            <Button x:Name="completionsBtn" BackgroundColor="GhostWhite" Grid.Column="1" Clicked="completionsBtn_Clicked" Text="Completions" TextColor="Black"></Button>
+        </Grid>
 
-        <VerticalStackLayout Grid.Row="1" Spacing="0">
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Spacing="5">
+                <!-- tasks to be added here -->
+                
+                <Grid ColumnDefinitions="50,*,75" HeightRequest="100">
+                    <BoxView Color="Blue" Grid.Column="0"></BoxView>
+                    <BoxView Color="OrangeRed" Grid.Column="1" ></BoxView>
+                    <BoxView Color="LawnGreen" Grid.Column="2"></BoxView>
+                </Grid>
 
-            <Grid ColumnDefinitions="*,*" HeightRequest="45" BackgroundColor="#F0F0F0">
-                <Button x:Name="TodosTabBtn" Grid.Column="0" Text="To-dos" Clicked="TodosTabBtn_Clicked" CornerRadius="0" BackgroundColor="LightGray" TextColor="Black" />
-                <Button x:Name="CompletionsTabBtn" Grid.Column="1" Text="Completions" Clicked="CompletionsTabBtn_Clicked" CornerRadius="0" BackgroundColor="White" TextColor="Gray" />
-            </Grid>
+                <Grid ColumnDefinitions="50,*,75" HeightRequest="100">
+                    <BoxView Color="Blue" Grid.Column="0"></BoxView>
+                    <BoxView Color="OrangeRed" Grid.Column="1" ></BoxView>
+                    <BoxView Color="LawnGreen" Grid.Column="2"></BoxView>
+                </Grid>
 
-            <Grid>
-                <CollectionView x:Name="ActiveTasksList" IsVisible="True">
-                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
 
-                <CollectionView x:Name="CompletedTasksList" IsVisible="False">
-                </CollectionView>
-            </Grid>
-
-        </VerticalStackLayout>
+        <!-- floating button to add task -->
+        <AbsoluteLayout>
+            <Button x:Name="addTaskBtn"
+                WidthRequest="50" 
+                HeightRequest="50"
+                BackgroundColor="Aqua"
+                Text="+" TextColor="White" FontAttributes="Bold" FontSize="Medium"
+                AbsoluteLayout.LayoutBounds="0.85,8.5,1,1"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Clicked="addTaskBtn_Clicked"
+            />
+        </AbsoluteLayout>
     </Grid>
+
 
 </ContentPage>
