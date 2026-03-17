@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SimplyTodosApp.MainPage">
 
-    <Grid RowDefinitions="75, 50, *"
+    <Grid RowDefinitions="75, 50, 5*,*"
           RowSpacing="10">
         
         <Grid ColumnDefinitions="85,*,50" BackgroundColor="GhostWhite">
@@ -13,8 +13,8 @@
         </Grid>
 
         <Grid ColumnDefinitions="*,*" Grid.Row="1">
-            <Button x:Name="todosBtn" BackgroundColor="Gray" Grid.Column="0" Clicked="todosBtn_Clicked" Text="To-dos" TextColor="White"></Button>
-            <Button x:Name="completionsBtn" BackgroundColor="GhostWhite" Grid.Column="1" Clicked="completionsBtn_Clicked" Text="Completions" TextColor="Black"></Button>
+            <Button x:Name="TodosBtn" BackgroundColor="Gray" Grid.Column="0" Clicked="TodosBtn_Clicked" Text="To-dos" TextColor="White"></Button>
+            <Button x:Name="CompletionsBtn" BackgroundColor="GhostWhite" Grid.Column="1" Clicked="CompletionsBtn_Clicked" Text="Completions" TextColor="Black"></Button>
         </Grid>
 
         <ScrollView Grid.Row="2">
@@ -37,15 +37,15 @@
         </ScrollView>
 
         <!-- floating button to add task -->
-        <AbsoluteLayout>
+        <AbsoluteLayout Grid.Row="3">
             <Button x:Name="addTaskBtn"
-                WidthRequest="50" 
-                HeightRequest="50"
-                BackgroundColor="Aqua"
-                Text="+" TextColor="White" FontAttributes="Bold" FontSize="Medium"
-                AbsoluteLayout.LayoutBounds="0.85,8.5,1,1"
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                Clicked="addTaskBtn_Clicked"
+                    WidthRequest="80" 
+                    HeightRequest="80"
+                    BackgroundColor="Aqua"
+                    Text="+" TextColor="White" FontAttributes="Bold" FontSize="50" 
+                    AbsoluteLayout.LayoutBounds="0.85,0"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    Clicked="AddTaskBtn_Clicked"
             />
         </AbsoluteLayout>
     </Grid>
