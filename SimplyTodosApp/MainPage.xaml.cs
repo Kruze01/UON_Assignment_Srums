@@ -1,4 +1,7 @@
-﻿namespace SimplyTodosApp
+﻿using System.Collections.ObjectModel;
+using SimplyTodosApp.ViewModels;
+
+namespace SimplyTodosApp
 {
     public partial class MainPage : ContentPage
     {
@@ -7,6 +10,7 @@
         public MainPage()
         {
             InitializeComponent();
+            BindingContext = new MainViewModel();
         }
 
         private void TodosBtn_Clicked(object sender, EventArgs e)
@@ -38,5 +42,6 @@
         {
             DisplayAlertAsync("Notification", "A new task has been added successfully.", "Okay");
         }
+
     }
 }
