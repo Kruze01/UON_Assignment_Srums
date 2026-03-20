@@ -1,54 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SimplyTodosApp.MainPage">
-
-    <Grid RowDefinitions="75, 50, *"
-          RowSpacing="10">
+             xmlns:viewmodel="clr-namespace:SimplyTodosApp.ViewModels"
+             xmlns:model="clr-namespace:SimplyTodosApp.Models"
+             x:DataType="viewmodel:MainViewModel"
+             x:Class="SimplyTodosApp.MainPage"
+             Shell.NavBarIsVisible="False">
+    
+    <AbsoluteLayout>
         
-        <Grid ColumnDefinitions="85,*,50" BackgroundColor="GhostWhite">
-            <Label Grid.Column="0" Text="16-March-2026" VerticalOptions="Center" HorizontalOptions="Center" FontSize="12"></Label>
-            <Label Grid.Column="1" Text="Simply To-dos" VerticalOptions="Center" HorizontalOptions="Center" FontSize="15" FontAttributes="Bold"></Label>
-            <Image Grid.Column="2" Source="dotnet_bot.png"></Image>
+    <Grid RowDefinitions="75, 50, *"
+          RowSpacing="10"
+          Padding="0,20,0,20"
+          AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+          AbsoluteLayout.LayoutFlags="All">
+        
+        <Grid ColumnDefinitions="Auto,*,50" BackgroundColor="GhostWhite">
+            <Label Grid.Column="0" Text="March 16 2026" VerticalOptions="Center" HorizontalOptions="Center" FontSize="15" HorizontalTextAlignment="Center" Padding="5"></Label>
+            <Label Grid.Column="1" Text="Simply To-dos" VerticalOptions="Center" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold" Margin="0,0,40,0"></Label>
+            <Image Grid.Column="2" Source="dotnet_bot.png" Margin="0,0,10,0"></Image>
         </Grid>
 
         <Grid ColumnDefinitions="*,*" Grid.Row="1">
-            <Button x:Name="todosBtn" BackgroundColor="Gray" Grid.Column="0" Clicked="todosBtn_Clicked" Text="To-dos" TextColor="White"></Button>
-            <Button x:Name="completionsBtn" BackgroundColor="GhostWhite" Grid.Column="1" Clicked="completionsBtn_Clicked" Text="Completions" TextColor="Black"></Button>
+            <Button x:Name="TodosBtn" BackgroundColor="Gray" Grid.Column="0" Clicked="TodosBtn_Clicked" Text="To-dos" TextColor="White"></Button>
+            <Button x:Name="CompletionsBtn" BackgroundColor="GhostWhite" Grid.Column="1" Clicked="CompletionsBtn_Clicked" Text="Completions" TextColor="Black"></Button>
         </Grid>
 
-        <ScrollView Grid.Row="2">
-            <VerticalStackLayout Spacing="5">
-                <!-- tasks to be added here -->
-                
-                <Grid ColumnDefinitions="50,*,75" HeightRequest="100">
-                    <BoxView Color="Blue" Grid.Column="0"></BoxView>
-                    <BoxView Color="OrangeRed" Grid.Column="1" ></BoxView>
-                    <BoxView Color="LawnGreen" Grid.Column="2"></BoxView>
-                </Grid>
+        <CollectionView Grid.Row="2" ItemsSource="{Binding TasksList}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Task">
+                    <Grid ColumnDefinitions="*,4*,*,*"  HeightRequest="100" Padding="20,10,20,10">
+                            <CheckBox Grid.Column="0"  VerticalOptions="Center">
+                            
+                        </CheckBox>
 
-                <Grid ColumnDefinitions="50,*,75" HeightRequest="100">
-                    <BoxView Color="Blue" Grid.Column="0"></BoxView>
-                    <BoxView Color="OrangeRed" Grid.Column="1" ></BoxView>
-                    <BoxView Color="LawnGreen" Grid.Column="2"></BoxView>
-                </Grid>
+                            <Grid Grid.Column="1" RowDefinitions="*,3*" VerticalOptions="Center" >
+                                <Label Text="{Binding Heading}" Grid.Row="0" />
+                                <Label Text="{Binding Description}" Grid.Row="1" />
+                            </Grid>
 
-            </VerticalStackLayout>
-        </ScrollView>
+                            <ImageButton Grid.Column="2" x:Name="edit" HorizontalOptions="End"  VerticalOptions="Center"></ImageButton>
+                            <ImageButton Grid.Column="3" x:Name="delete" HorizontalOptions="End"  VerticalOptions="Center"></ImageButton>
+                        
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-        <!-- floating button to add task -->
-        <AbsoluteLayout>
-            <Button x:Name="addTaskBtn"
-                WidthRequest="50" 
-                HeightRequest="50"
-                BackgroundColor="Aqua"
-                Text="+" TextColor="White" FontAttributes="Bold" FontSize="Medium"
-                AbsoluteLayout.LayoutBounds="0.85,8.5,1,1"
+        </Grid>
+
+        <Button Text="+"
+                FontSize="36"
+                FontAttributes="Bold"
+                WidthRequest="70"
+                HeightRequest="70"
+                CornerRadius="35"
+                BackgroundColor="DodgerBlue"
+                TextColor="White"
+                Padding="0"
+                AbsoluteLayout.LayoutBounds="0.95, 0.95, 70, 70"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
-                Clicked="addTaskBtn_Clicked"
-            />
-        </AbsoluteLayout>
-    </Grid>
-
+                Command="{Binding AddTaskCommand}" />
+    </AbsoluteLayout>
 
 </ContentPage>

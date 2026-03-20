@@ -1,4 +1,7 @@
-﻿namespace SimplyTodosApp
+﻿using System.Collections.ObjectModel;
+using SimplyTodosApp.ViewModels;
+
+namespace SimplyTodosApp
 {
     public partial class MainPage : ContentPage
     {
@@ -7,36 +10,38 @@
         public MainPage()
         {
             InitializeComponent();
+            BindingContext = new MainViewModel();
         }
 
-        private void todosBtn_Clicked(object sender, EventArgs e)
+        private void TodosBtn_Clicked(object sender, EventArgs e)
         {
             if (activated != "todos")
             {
                 activated = "todos";
-                todosBtn.BackgroundColor = Colors.Gray;
-                todosBtn.TextColor = Colors.White;
-                completionsBtn.BackgroundColor = Colors.GhostWhite;
-                completionsBtn.TextColor = Colors.Black;
+                TodosBtn.BackgroundColor = Colors.Gray;
+                TodosBtn.TextColor = Colors.White;
+                CompletionsBtn.BackgroundColor = Colors.GhostWhite;
+                CompletionsBtn.TextColor = Colors.Black;
             }
 
         }
 
-        private void completionsBtn_Clicked(object sender, EventArgs e)
+        private void CompletionsBtn_Clicked(object sender, EventArgs e)
         {
             if (activated != "completions")
             {
                 activated = "completions";
-                todosBtn.BackgroundColor = Colors.GhostWhite;
-                todosBtn.TextColor = Colors.Black;
-                completionsBtn.BackgroundColor = Colors.Gray;
-                completionsBtn.TextColor = Colors.White;
+                TodosBtn.BackgroundColor = Colors.GhostWhite;
+                TodosBtn.TextColor = Colors.Black;
+                CompletionsBtn.BackgroundColor = Colors.Gray;
+                CompletionsBtn.TextColor = Colors.White;
             }
         }
 
-        private void addTaskBtn_Clicked(object sender, EventArgs e)
+        private void AddTaskBtn_Clicked(object sender, EventArgs e)
         {
-            DisplayAlertAsync("Notification", "A new task has been added", "Okay");
+            DisplayAlertAsync("Notification", "A new task has been added successfully.", "Okay");
         }
+
     }
 }
