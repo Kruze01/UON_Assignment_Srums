@@ -1,9 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SQLite;
 
 namespace SimplyTodosApp.Models
 {
     public partial class Task : ObservableObject
     {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; } // index for database
+
         [ObservableProperty]
         private string _heading;
 
@@ -14,13 +18,12 @@ namespace SimplyTodosApp.Models
         private string _priority;
 
         [ObservableProperty]
-        private Boolean _isCompleted;
-
+        private bool _isCompleted;
     }
-//    public enum TaskPriority
-//    {
-//        High = 1,
-//        Medium = 2,
-//        Low = 3,
-//    }
+    //    public enum TaskPriority
+    //    {
+    //        High = 1,
+    //        Medium = 2,
+    //        Low = 3,
+    //    }
 }

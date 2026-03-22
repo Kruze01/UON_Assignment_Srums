@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using SimplyTodosApp.Services;
+using SimplyTodosApp.ViewModels;
 
 namespace SimplyTodosApp
 {
@@ -16,9 +18,12 @@ namespace SimplyTodosApp
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
                 .UseMauiCommunityToolkit();
+            builder.Services.AddSingleton<DatabaseService>();
+            builder.Services.AddTransient<MainViewModel>();
+            builder.Services.AddTransient<MainPage>();
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

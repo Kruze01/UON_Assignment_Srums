@@ -1,36 +1,59 @@
-﻿using SimplyTodosApp.Models;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SimplyTodosApp.Models;
+using SimplyTodosApp.Services;
 using System.Collections.ObjectModel;
 using Task = SimplyTodosApp.Models.Task;
-using CommunityToolkit.Mvvm.Input;
 
 namespace SimplyTodosApp.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private ObservableCollection<Task> _tasksList = new ObservableCollection<Task>();
+        private readonly DatabaseService _dbService;
 
-        public MainViewModel() {
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
-            TasksList.Add(new Task { Heading = "Task1", Description = "NewDescription", Priority = "High", IsCompleted = false });
+        [ObservableProperty]
+        private ObservableCollection<Task> _tasksList = new();
+
+        public MainViewModel(DatabaseService dbService)
+        {
+            _dbService = dbService;
+            LoadTasks();
+        }
+
+        private async void LoadTasks()
+        {
+            var tasks = await _dbService.GetTasksAsync();
+            foreach (var task in tasks)
+                TasksList.Add(task);
         }
 
         [RelayCommand]
-        private void AddTask()
+        private async void AddTask()
         {
-            TasksList.Add(new Task { Heading = "New Task", Description = "Description hello how are you nice to meet you thanks haha nice ok great well played great well fafewbuefwfaefbbjbea beffabjef kafeabjebjfafkjefjbefaw", Priority = "High", IsCompleted = false });
+            //A placeholder is used now, and this will be updated 
+            var newTask = new Task { 
+                Heading = "New Task 101", 
+                Description = "This is a testing.", 
+                Priority = "Medium" }; 
+
+            //Save in SQLite
+            await _dbService.SaveTaskAsync(newTask);
+
+            //Update in UI list
+            TasksList.Add(newTask);
         }
-        
+
+        [RelayCommand]
+        private async void DeleteTask(Task task)
+        {
+            if (task == null) return;
+
+            //Remove from SQLite
+            await _dbService.DeleteTaskAsync(task);
+
+            //Remove from UI list
+            TasksList.Remove(task);
+        }
     }
 };
 
