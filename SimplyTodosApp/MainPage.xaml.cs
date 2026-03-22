@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using SimplyTodosApp.ViewModels;
+﻿using SimplyTodosApp.ViewModels;
 
 namespace SimplyTodosApp
 {
@@ -7,10 +6,10 @@ namespace SimplyTodosApp
     {
         string activated = "todos";
 
-        public MainPage()
+        public MainPage(MainViewModel vm)
         {
             InitializeComponent();
-            BindingContext = new MainViewModel();
+            BindingContext = vm;
         }
 
         private void TodosBtn_Clicked(object sender, EventArgs e)
@@ -38,10 +37,19 @@ namespace SimplyTodosApp
             }
         }
 
-        private void AddTaskBtn_Clicked(object sender, EventArgs e)
+        //private void AddTaskBtn_Clicked(object sender, EventArgs e)
+        //{
+        //    DisplayAlertAsync("Notification", "A new task has been added successfully.", "Okay");
+        //}
+
+        private void Button_Clicked(object sender, EventArgs e)
         {
-            DisplayAlertAsync("Notification", "A new task has been added successfully.", "Okay");
+            DisplayAlertAsync("Update","Edit button pop-up here!","Close");
         }
 
+        private void ImageButton_Clicked(object sender, EventArgs e)
+        {
+            DisplayAlertAsync("How to...", "How to use this app pop-up here!", "Close");
+        }
     }
 }
