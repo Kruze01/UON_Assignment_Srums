@@ -30,9 +30,13 @@ namespace SimplyTodosApp.ViewModels
         [RelayCommand]
         private async void AddTask()
         {
-            var newTask = new Task { Heading = "New Task 101", Description = "This is a testing.", Priority = "Medium" }; //Is a placeholder, to be updated by using user input
+            //A placeholder is used now, and this will be updated 
+            var newTask = new Task { 
+                Heading = "New Task 101", 
+                Description = "This is a testing.", 
+                Priority = "Medium" }; 
 
-            //Save in sqlite
+            //Save in SQLite
             await _dbService.SaveTaskAsync(newTask);
 
             //Update in UI list
@@ -44,10 +48,10 @@ namespace SimplyTodosApp.ViewModels
         {
             if (task == null) return;
 
-            //1.Remove from SQLite
+            //Remove from SQLite
             await _dbService.DeleteTaskAsync(task);
 
-            //2.Remove from UI list
+            //Remove from UI list
             TasksList.Remove(task);
         }
     }
