@@ -6,7 +6,7 @@ namespace SimplyTodosApp.Models
     public partial class Task : ObservableObject
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; } // index for database
+        public int Id { get; set; } // Database needs a unique ID
 
         [ObservableProperty]
         private string _heading;
@@ -20,10 +20,4 @@ namespace SimplyTodosApp.Models
         [ObservableProperty]
         private bool _isCompleted;
     }
-    //    public enum TaskPriority
-    //    {
-    //        High = 1,
-    //        Medium = 2,
-    //        Low = 3,
-    //    }
 }

@@ -1,5 +1,4 @@
 ﻿using SQLite;
-using SimplyTodosApp.Models;
 using Task = SimplyTodosApp.Models.Task;
 
 namespace SimplyTodosApp.Services;
@@ -10,21 +9,13 @@ public class DatabaseService
 
     async System.Threading.Tasks.Task Init()
     {
-        try
-        {
-            if (_database is not null) 
-                return;
+        if (_database is not null)
+            return;
 
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "MyTasks.db3");
-            _database = new SQLiteAsyncConnection(dbPath);
-            await _database.CreateTableAsync<Task>();
-        }
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "MyTasks.db");
 
-        catch (Exception e)
-        {
-            // message to tell the user that loading database failed
-            
-        }
+        _database = new SQLiteAsyncConnection(dbPath);
+        await _database.CreateTableAsync<Task>();
     }
 
     public async Task<List<Task>> GetTasksAsync()
@@ -36,7 +27,10 @@ public class DatabaseService
     public async Task<int> SaveTaskAsync(Task task)
     {
         await Init();
-        return await _database.InsertAsync(task);
+        if (task.Id != 0)   //If task has Id, it's existing task
+            return await _database.UpdateAsync(task);   //If existing task, update
+        else
+            return await _database.InsertAsync(task);   //If new task, insert
     }
 
     public async Task<int> DeleteTaskAsync(Task task)
