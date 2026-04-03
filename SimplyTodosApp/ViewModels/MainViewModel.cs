@@ -31,7 +31,7 @@ namespace SimplyTodosApp.ViewModels
             LoadTasks();
         }
 
-        //For tasks filtering between Todos View and Completion View
+        //For filtering which tasks to be displayed on Todos View and on Completion View
         async void LoadTasks()
         {
             var allTasks = await _dbService.GetTasksAsync();
@@ -43,7 +43,7 @@ namespace SimplyTodosApp.ViewModels
         }
 
         //For adding a new task
-        //Will call ModifyTaskPopup
+        //This will show ModifyTaskPopup
         [RelayCommand]
         async System.Threading.Tasks.Task AddTask()
         {
@@ -62,7 +62,7 @@ namespace SimplyTodosApp.ViewModels
         }
 
         //For editing a new Task
-        //Will call ModifyTaskPopup
+        //This will show ModifyTaskPopup
         [RelayCommand]
         async System.Threading.Tasks.Task EditTask(Task taskToEdit)
         {
@@ -86,14 +86,14 @@ namespace SimplyTodosApp.ViewModels
         }
 
         //For removing a new Task
-        //Will call ConfirmationPopup
+        //This will show ConfirmationPopup
         [RelayCommand]
-        async void DeleteTask(Task task)
+        async void RemoveTask(Task task)
         {
             if (task == null)
                 return;
 
-            var popup = new ConfirmationPopup("Remove Task", "Are you sure you want to Remove this task ?");
+            var popup = new ConfirmationPopup("Remove Task", "Are you sure you want to remove the task ?");
             var result = await Shell.Current.CurrentPage.ShowPopupAsync<bool>(popup);
             bool confirmed = result != null && !result.WasDismissedByTappingOutsideOfPopup && result.Result;
             if (!confirmed)
@@ -107,7 +107,7 @@ namespace SimplyTodosApp.ViewModels
         }
 
         //For changing a task's IsCompleted attribute
-        //Called if a task's checkbox is clicked
+        //This method is called if a task's checkbox is clicked
         [RelayCommand]
         async void ToggleComplete(Task task)
         {
@@ -123,7 +123,7 @@ namespace SimplyTodosApp.ViewModels
         }
 
         //For reviewing a Task
-        //Will call ReviewTaskPopup
+        //This will show ReviewTaskPopup
         [RelayCommand]
         async System.Threading.Tasks.Task ReviewTask(Task task)
         {
@@ -134,8 +134,10 @@ namespace SimplyTodosApp.ViewModels
             await Shell.Current.CurrentPage.ShowPopupAsync(popup);
         }
 
-        //List of selected completed-tasks to be deleted in Completions View
+        //List of selected completed-tasks to be removed in Completions View
         List<Task> TasksToDeleteList = new();
+
+        //Selecting and Deselecting completed task to be removed
 
         [RelayCommand]
         async void SelectCompletedTask(Task task)
@@ -143,28 +145,24 @@ namespace SimplyTodosApp.ViewModels
             if (task == null)
                 return;
 
-            //if (TasksToDeleteList.Count == 0)
-            //    TasksToDeleteList.Add(task);
-            //else
-            //{
-                if (TasksToDeleteList.Contains(task))
-                    TasksToDeleteList.Remove(task);
-                else
-                    TasksToDeleteList.Add(task);
-            //}
+            if (TasksToDeleteList.Contains(task))
+                TasksToDeleteList.Remove(task);
+            else
+                TasksToDeleteList.Add(task);
         }
 
-        //For removing all selected completed-tasks in Completions view
+        //For removing all selected tasks history in Completions view
         //Will call ConfirmationPopup
         [RelayCommand]
-        async void DeleteSelectedTasks(List<Task> TaskToDeleteList)
+        async void RemoveSelectedTasksHistory(List<Task> TaskToDeleteList)
         {
             if (TasksToDeleteList.Count == 0)
                 return;
 
-            var popup = new ConfirmationPopup("Clear Tasks", "Are you sure you want to remove all selected tasks that you have already completed?");
+            var popup = new ConfirmationPopup("Clear Tasks", "Are you sure you want to remove all selected tasks that are completed?");
             var result = await Shell.Current.CurrentPage.ShowPopupAsync<bool>(popup);
             bool confirmed = result != null && !result.WasDismissedByTappingOutsideOfPopup && result.Result;
+
             if (!confirmed)
                 return;
 

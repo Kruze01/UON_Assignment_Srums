@@ -59,7 +59,7 @@
 
                                 <!-- Delete Tasks Button for Todos View -->
                                 <Button x:Name="DeleteTaskBtn" Grid.Column="3" Text="D" BackgroundColor="Red" HorizontalOptions="End"  VerticalOptions="Center" TextColor="White" 
-                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=DeleteTaskCommand}"
+                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=RemoveTaskCommand}"
                                  CommandParameter="{Binding .}" >
                                     <Button.Triggers>
                                         <DataTrigger TargetType = "Button" Binding ="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}" Value="True">
@@ -139,7 +139,7 @@
                  Padding="0"
                  AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
                  AbsoluteLayout.LayoutFlags="PositionProportional"
-                 Command="{Binding DeleteSelectedTasksCommand}" />
+                 Command="{Binding RemoveSelectedTasksHistoryCommand}" />
         
         <!--
         <ImageButton

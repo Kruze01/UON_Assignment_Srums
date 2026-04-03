@@ -17,7 +17,7 @@
 
             <Border StrokeThickness="0">
                 <VerticalStackLayout>
-                    <Label Text="Task Name: " TextColor="Black" ></Label>
+                    <Label Text="Task Heading: " TextColor="Black" ></Label>
                     <Entry Text="{Binding Heading}" Placeholder="Enter Task Heading" BackgroundColor="#fafafa" TextColor="Black" />
                 </VerticalStackLayout>
             </Border>

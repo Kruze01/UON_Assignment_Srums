@@ -23,7 +23,7 @@
                    HorizontalTextAlignment="Center" 
                    TextColor="Black"/>
 
-            <Label Text="This action cannot be undone"
+            <Label Text="This action cannot be undone."
                    TextColor="Red"
                    FontAttributes="Bold" 
                    TextDecorations="Underline"
