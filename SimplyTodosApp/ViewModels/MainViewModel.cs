@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Maui.Alerts;
 using SimplyTodosApp.Services;
 using SimplyTodosApp.Views;
 using System.Collections.ObjectModel;
@@ -56,6 +57,9 @@ namespace SimplyTodosApp.ViewModels
                 //Save to SQLite
                 await _dbService.SaveTaskAsync(newTask);
 
+                //Notify user
+                await Toast.Make("A new task has been created successfully!").Show();
+
                 //Add to UI list
                 TasksList.Add(newTask);
             }
@@ -80,6 +84,9 @@ namespace SimplyTodosApp.ViewModels
                 //Update in SQLite
                 await _dbService.SaveTaskAsync(taskToEdit);
 
+                //Notify user
+                await Toast.Make("Task has been updated successfully!").Show();
+
                 //Refresh UI list
                 LoadTasks();
             }
@@ -101,6 +108,9 @@ namespace SimplyTodosApp.ViewModels
 
             //Remove from SQLite
             await _dbService.DeleteTaskAsync(task);
+
+            //Notify user
+            await Toast.Make("Task has been removed successfully!").Show();
 
             //Remove from UI list
             TasksList.Remove(task);
@@ -168,6 +178,9 @@ namespace SimplyTodosApp.ViewModels
 
             foreach (var task in TasksToDeleteList)
                 await _dbService.DeleteTaskAsync(task);
+
+            //Notify user
+            await Toast.Make("Selected tasks have been removed successfully!").Show();
 
             LoadTasks();
         }

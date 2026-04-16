@@ -82,7 +82,7 @@
                                         <RoundRectangle CornerRadius="30" />
                                     </Border.StrokeShape>
 
-                                    <Image Source="tick.png" 
+                                    <Image Source="tick.svg" 
                                        HeightRequest="20"
                                        WidthRequest="20"
                                        Aspect="AspectFit"

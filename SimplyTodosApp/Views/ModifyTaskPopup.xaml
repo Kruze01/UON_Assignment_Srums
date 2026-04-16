@@ -16,15 +16,39 @@
             <Label x:Name="PopupHeading" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20" TextColor="Black" />
 
             <Border StrokeThickness="0">
-                <VerticalStackLayout>
-                    <Label Text="Task Heading: " TextColor="Black" ></Label>
-                    <Entry Text="{Binding Heading}" Placeholder="Enter Task Heading" BackgroundColor="#fafafa" TextColor="Black" />
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Task Heading: " TextColor="Black" />
+                    <Entry x:Name="HeadingEntry" 
+                       Text="{Binding Heading}" 
+                       Placeholder="Enter Task Heading" 
+                       BackgroundColor="#fafafa" 
+                       TextColor="Black" 
+                       TextChanged="OnHeadingTextChanged" />
+
+                    <Label x:Name="HeadingCountLabel" 
+                       Text="0/200 characters" 
+                       TextColor="Black" 
+                       FontSize="12" 
+                       HorizontalOptions="End" />
                 </VerticalStackLayout>
             </Border>
+
             <Border StrokeThickness="0">
-                <VerticalStackLayout>
-                    <Label Text="Task Description: " TextColor="Black"></Label>
-                    <Editor Text="{Binding Description}" Placeholder="Enter Task Description" BackgroundColor="#fafafa" TextColor="Black" HeightRequest="100" />
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Task Description: " TextColor="Black" />
+                    <Editor x:Name="DescriptionEditor" 
+                        Text="{Binding Description}" 
+                        Placeholder="Enter Task Description" 
+                        BackgroundColor="#fafafa" 
+                        TextColor="Black" 
+                        HeightRequest="100" 
+                        TextChanged="OnDescriptionTextChanged" />
+
+                    <Label x:Name="DescriptionCountLabel" 
+                       Text="0/2000 characters" 
+                       TextColor="Black" 
+                       FontSize="12" 
+                       HorizontalOptions="End" />
                 </VerticalStackLayout>
             </Border>
 
