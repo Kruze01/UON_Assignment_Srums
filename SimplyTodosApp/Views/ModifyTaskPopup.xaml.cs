@@ -59,10 +59,6 @@ public partial class ModifyTaskPopup : Popup<Task>
         DescriptionCountLabel.TextColor = count > _maxDescriptionChars ? Colors.Red : Colors.Black;
     }
 
-    
-    async void OnCancelClicked(object sender, EventArgs e) { 
-        await CloseAsync(null); 
-    }
 
     async void OnSaveClicked(object sender, EventArgs e)
     {
@@ -104,4 +100,9 @@ public partial class ModifyTaskPopup : Popup<Task>
         //If valid, return the task to the ViewModel
         await CloseAsync(BindingContext as Task);
     }
+    async void OnCancelClicked(object sender, EventArgs e)
+    {
+        await CloseAsync(null);
+    }
+
 }

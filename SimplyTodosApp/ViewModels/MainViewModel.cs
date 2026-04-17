@@ -124,9 +124,14 @@ namespace SimplyTodosApp.ViewModels
             if (task == null)
                 return;
 
+            string textForToast = task.IsCompleted ? "Task has been marked as incompleted." : "Task has been marked as completed.";
+
             //Update in SQLite
             task.IsCompleted = !task.IsCompleted;
             await _dbService.SaveTaskAsync(task);
+
+            //Notify user
+            await Toast.Make(textForToast).Show();
 
             //Update in UI list
             LoadTasks();
@@ -167,7 +172,11 @@ namespace SimplyTodosApp.ViewModels
         async void RemoveSelectedTasksHistory(List<Task> TaskToDeleteList)
         {
             if (TasksToDeleteList.Count == 0)
+            {
+                //Notify user how it works
+                await Toast.Make("Please select at least one task to remove.").Show();
                 return;
+            }
 
             var popup = new ConfirmationPopup("Clear Tasks", "Are you sure you want to remove all selected tasks that are completed?");
             var result = await Shell.Current.CurrentPage.ShowPopupAsync<bool>(popup);
@@ -184,6 +193,5 @@ namespace SimplyTodosApp.ViewModels
 
             LoadTasks();
         }
-
     }
 }
