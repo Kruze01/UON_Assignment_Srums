@@ -9,7 +9,6 @@ namespace SimplyTodosApp
         {
             InitializeComponent();
             BindingContext = vm;
-
         }
 
         private void TodosBtn_Clicked(object sender, EventArgs e)
@@ -21,7 +20,6 @@ namespace SimplyTodosApp
                 TodosBtn.TextColor = Colors.White;
                 CompletionsBtn.BackgroundColor = Colors.GhostWhite;
                 CompletionsBtn.TextColor = Colors.Black;
-                //AddTaskBtn.IsEnabled = true;
                 AddTaskBtn.IsVisible = true;
                 DeleteSelectedTasksBtn.IsVisible = false;
             }
@@ -36,21 +34,10 @@ namespace SimplyTodosApp
                 TodosBtn.TextColor = Colors.Black;
                 CompletionsBtn.BackgroundColor = Colors.Gray;
                 CompletionsBtn.TextColor = Colors.White;
-                //AddTaskBtn.IsEnabled = false;
                 AddTaskBtn.IsVisible = false;
                 DeleteSelectedTasksBtn.IsVisible = true;
             }
         }
-
-        //private void AddTaskBtn_Clicked(object sender, EventArgs e)
-        //{
-        //    DisplayAlertAsync("Notification", "A new task has been added successfully.", "Okay");
-        //}
-
-        //private void Button_Clicked(object sender, EventArgs e)
-        //{
-        //    DisplayAlertAsync("Update", "Edit button pop-up here!", "Close");
-        //}
 
         private void ImageButton_Clicked(object sender, EventArgs e)
         {

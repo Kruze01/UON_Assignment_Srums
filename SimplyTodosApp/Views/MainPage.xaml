@@ -10,16 +10,16 @@
     <AbsoluteLayout>
 
         <Grid RowDefinitions="75, 50, *"     
-        RowSpacing="10"
-        Padding="0,20,0,20"
-        AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
-        AbsoluteLayout.LayoutFlags="All"
-        BackgroundColor="White">
+              RowSpacing="10"
+              Padding="0,20,0,20"
+              AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+              AbsoluteLayout.LayoutFlags="All"
+              BackgroundColor="White">
 
             <Grid ColumnDefinitions="Auto,*,50" BackgroundColor="GhostWhite">
                 <Label Grid.Column="0" Text="March 16 2026" TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center" FontSize="15" HorizontalTextAlignment="Center" Padding="5"></Label>
                 <Label Grid.Column="1" Text="Simply To-dos" TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold" Margin="0,0,40,0" ></Label>
-                <ImageButton Grid.Column="2" Source="dotnet_bot.png" Margin="0,0,10,0" Clicked="ImageButton_Clicked"></ImageButton>
+                <ImageButton Grid.Column="2" Source="questionmark.svg" Margin="0,0,10,0" Clicked="ImageButton_Clicked"></ImageButton>
             </Grid>
 
             <Grid ColumnDefinitions="*,*" Grid.Row="1">
@@ -47,28 +47,47 @@
                                 </Grid>
 
                                 <!-- Edit Task Button for Todos View -->
-                                <Button x:Name="EditTaskBtn" Grid.Column="2" Text="E" BackgroundColor="DeepSkyBlue" HorizontalOptions="End"  VerticalOptions="Center" TextColor="White" IsEnabled="True"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=EditTaskCommand}"
-                                    CommandParameter="{Binding .}">
-                                    <Button.Triggers>
-                                        <DataTrigger TargetType = "Button" Binding ="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}" Value="True">
+                                <ImageButton x:Name="EditTaskBtn" 
+                                             Grid.Column="2" 
+                                             Source="pen.svg"  
+                                             HeightRequest="40" 
+                                             WidthRequest="40"
+                                             HorizontalOptions="End"  
+                                             VerticalOptions="Center" 
+                                             IsEnabled="True"
+                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=EditTaskCommand}"
+                                             CommandParameter="{Binding .}">
+                                    <ImageButton.Triggers>
+                                        <DataTrigger TargetType="ImageButton" 
+                                                     Binding="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}" 
+                                                     Value="True">
                                             <Setter Property="IsVisible" Value="False" />
                                         </DataTrigger>
-                                    </Button.Triggers>
-                                </Button>
+                                    </ImageButton.Triggers>
+                                </ImageButton>
 
                                 <!-- Delete Tasks Button for Todos View -->
-                                <Button x:Name="DeleteTaskBtn" Grid.Column="3" Text="D" BackgroundColor="Red" HorizontalOptions="End"  VerticalOptions="Center" TextColor="White" 
-                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=DeleteTaskCommand}"
-                                 CommandParameter="{Binding .}" >
-                                    <Button.Triggers>
-                                        <DataTrigger TargetType = "Button" Binding ="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}" Value="True">
+                                <ImageButton x:Name="DeleteTaskBtn" 
+                                             Grid.Column="3" 
+                                             Source="trashbin.png"
+                                             CornerRadius="5"
+                                             HeightRequest="40" 
+                                             WidthRequest="40"
+                                             BackgroundColor="Red" 
+                                             HorizontalOptions="End"  
+                                             VerticalOptions="Center"
+                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=RemoveTaskCommand}"
+                                             CommandParameter="{Binding .}">
+                                    <ImageButton.Triggers>
+                                        <DataTrigger TargetType="ImageButton" 
+                                                     Binding="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}" 
+                                                     Value="True">
                                             <Setter Property="IsVisible" Value="False" />
                                         </DataTrigger>
-                                    </Button.Triggers>
-                                </Button>
+                                    </ImageButton.Triggers>
+                                </ImageButton>
 
-                                <!-- Checkbox of a task for Completions View -->
+                                <!-- Checkbox to select a task as to be removed, for Completions View -->
                                 <Border Grid.Column="3"
                                     HeightRequest="30"
                                     WidthRequest="30"
@@ -82,7 +101,7 @@
                                         <RoundRectangle CornerRadius="30" />
                                     </Border.StrokeShape>
 
-                                    <Image Source="tick.png" 
+                                    <Image Source="tick.svg" 
                                        HeightRequest="20"
                                        WidthRequest="20"
                                        Aspect="AspectFit"
@@ -99,9 +118,9 @@
                                 </Border>
 
                             </Grid>
-                            
+
                             <BoxView HeightRequest="1" Color="Black" HorizontalOptions="Fill" />
-                            
+
                         </VerticalStackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -124,8 +143,8 @@
                  AbsoluteLayout.LayoutFlags="PositionProportional"
                  Command="{Binding AddTaskCommand}" />
 
-        <!-- Delete Selected Tasks Button for Completions View -->
-        
+
+        <!--
         <Button  x:Name="DeleteSelectedTasksBtn"
                  IsVisible="False"
                  Text="-"
@@ -139,25 +158,55 @@
                  Padding="0"
                  AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
                  AbsoluteLayout.LayoutFlags="PositionProportional"
-                 Command="{Binding DeleteSelectedTasksCommand}" />
-        
-        <!--
+                 Command="{Binding RemoveSelectedTasksHistoryCommand}" />
+
+        -->
+
+        <!-- Delete Selected Tasks Button for Completions View -->
         <ImageButton
             x:Name="DeleteSelectedTasksBtn"
             IsVisible="False"
-            Source="recyclebin.png"
+            Source="trashbin.svg"
             WidthRequest="70"
             HeightRequest="70"
             CornerRadius="35"
-            BackgroundColor="Red"
             Padding="0" Aspect="AspectFit"
             AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
-AbsoluteLayout.LayoutFlags="PositionProportional"
-HorizontalOptions="Center"
-VerticalOptions="Center"
-            Command="{Binding DeleteSelectedTasksCommand}"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Command="{Binding RemoveSelectedTasksHistoryCommand}"
             />
-        -->
+        <!--
+        <Border 
+            x:Name="DeleteSelectedTasksBtn"
+            HeightRequest="70"
+            WidthRequest="70"
+            StrokeThickness="0"
+            BackgroundColor="Red"
+            IsVisible="False"
+            AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding RemoveSelectedTasksHistoryCommand}" />
+            </Border.GestureRecognizers>
+            
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="35" />
+            </Border.StrokeShape>
+
+            <Path Fill="White"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center"
+                  Aspect="Uniform"
+                  HeightRequest="30"
+                  WidthRequest="30"
+                  Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+        </Border>
+                -->
     </AbsoluteLayout>
 
 </ContentPage>

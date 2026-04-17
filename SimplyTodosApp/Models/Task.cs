@@ -6,7 +6,7 @@ namespace SimplyTodosApp.Models
     public partial class Task : ObservableObject
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; } // Database needs a unique ID
+        public int Id { get; set; }
 
         [ObservableProperty]
         private string _heading;

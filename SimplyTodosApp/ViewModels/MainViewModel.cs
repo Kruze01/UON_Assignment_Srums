@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Maui.Alerts;
 using SimplyTodosApp.Services;
 using SimplyTodosApp.Views;
 using System.Collections.ObjectModel;
@@ -31,7 +32,7 @@ namespace SimplyTodosApp.ViewModels
             LoadTasks();
         }
 
-        //For tasks filtering between Todos View and Completion View
+        //For filtering which tasks to be displayed on Todos View and on Completion View
         async void LoadTasks()
         {
             var allTasks = await _dbService.GetTasksAsync();
@@ -43,7 +44,7 @@ namespace SimplyTodosApp.ViewModels
         }
 
         //For adding a new task
-        //Will call ModifyTaskPopup
+        //This will show ModifyTaskPopup
         [RelayCommand]
         async System.Threading.Tasks.Task AddTask()
         {
@@ -56,13 +57,16 @@ namespace SimplyTodosApp.ViewModels
                 //Save to SQLite
                 await _dbService.SaveTaskAsync(newTask);
 
+                //Notify user
+                await Toast.Make("A new task has been created successfully!").Show();
+
                 //Add to UI list
                 TasksList.Add(newTask);
             }
         }
 
         //For editing a new Task
-        //Will call ModifyTaskPopup
+        //This will show ModifyTaskPopup
         [RelayCommand]
         async System.Threading.Tasks.Task EditTask(Task taskToEdit)
         {
@@ -80,20 +84,23 @@ namespace SimplyTodosApp.ViewModels
                 //Update in SQLite
                 await _dbService.SaveTaskAsync(taskToEdit);
 
+                //Notify user
+                await Toast.Make("Task has been updated successfully!").Show();
+
                 //Refresh UI list
                 LoadTasks();
             }
         }
 
         //For removing a new Task
-        //Will call ConfirmationPopup
+        //This will show ConfirmationPopup
         [RelayCommand]
-        async void DeleteTask(Task task)
+        async void RemoveTask(Task task)
         {
             if (task == null)
                 return;
 
-            var popup = new ConfirmationPopup("Remove Task", "Are you sure you want to Remove this task ?");
+            var popup = new ConfirmationPopup("Remove Task", "Are you sure you want to remove the task ?");
             var result = await Shell.Current.CurrentPage.ShowPopupAsync<bool>(popup);
             bool confirmed = result != null && !result.WasDismissedByTappingOutsideOfPopup && result.Result;
             if (!confirmed)
@@ -102,28 +109,36 @@ namespace SimplyTodosApp.ViewModels
             //Remove from SQLite
             await _dbService.DeleteTaskAsync(task);
 
+            //Notify user
+            await Toast.Make("Task has been removed successfully!").Show();
+
             //Remove from UI list
             TasksList.Remove(task);
         }
 
         //For changing a task's IsCompleted attribute
-        //Called if a task's checkbox is clicked
+        //This method is called if a task's checkbox is clicked
         [RelayCommand]
         async void ToggleComplete(Task task)
         {
             if (task == null)
                 return;
 
+            string textForToast = task.IsCompleted ? "Task has been marked as incompleted." : "Task has been marked as completed.";
+
             //Update in SQLite
             task.IsCompleted = !task.IsCompleted;
             await _dbService.SaveTaskAsync(task);
+
+            //Notify user
+            await Toast.Make(textForToast).Show();
 
             //Update in UI list
             LoadTasks();
         }
 
         //For reviewing a Task
-        //Will call ReviewTaskPopup
+        //This will show ReviewTaskPopup
         [RelayCommand]
         async System.Threading.Tasks.Task ReviewTask(Task task)
         {
@@ -134,8 +149,10 @@ namespace SimplyTodosApp.ViewModels
             await Shell.Current.CurrentPage.ShowPopupAsync(popup);
         }
 
-        //List of selected completed-tasks to be deleted in Completions View
+        //List of selected completed-tasks to be removed in Completions View
         List<Task> TasksToDeleteList = new();
+
+        //Selecting and Deselecting completed task to be removed
 
         [RelayCommand]
         async void SelectCompletedTask(Task task)
@@ -143,36 +160,38 @@ namespace SimplyTodosApp.ViewModels
             if (task == null)
                 return;
 
-            //if (TasksToDeleteList.Count == 0)
-            //    TasksToDeleteList.Add(task);
-            //else
-            //{
-                if (TasksToDeleteList.Contains(task))
-                    TasksToDeleteList.Remove(task);
-                else
-                    TasksToDeleteList.Add(task);
-            //}
+            if (TasksToDeleteList.Contains(task))
+                TasksToDeleteList.Remove(task);
+            else
+                TasksToDeleteList.Add(task);
         }
 
-        //For removing all selected completed-tasks in Completions view
+        //For removing all selected tasks history in Completions view
         //Will call ConfirmationPopup
         [RelayCommand]
-        async void DeleteSelectedTasks(List<Task> TaskToDeleteList)
+        async void RemoveSelectedTasksHistory(List<Task> TaskToDeleteList)
         {
             if (TasksToDeleteList.Count == 0)
+            {
+                //Notify user how it works
+                await Toast.Make("Please select at least one task to remove.").Show();
                 return;
+            }
 
-            var popup = new ConfirmationPopup("Clear Tasks", "Are you sure you want to remove all selected tasks that you have already completed?");
+            var popup = new ConfirmationPopup("Clear Tasks", "Are you sure you want to remove all selected tasks that are completed?");
             var result = await Shell.Current.CurrentPage.ShowPopupAsync<bool>(popup);
             bool confirmed = result != null && !result.WasDismissedByTappingOutsideOfPopup && result.Result;
+
             if (!confirmed)
                 return;
 
             foreach (var task in TasksToDeleteList)
                 await _dbService.DeleteTaskAsync(task);
 
+            //Notify user
+            await Toast.Make("Selected tasks have been removed successfully!").Show();
+
             LoadTasks();
         }
-
     }
 }

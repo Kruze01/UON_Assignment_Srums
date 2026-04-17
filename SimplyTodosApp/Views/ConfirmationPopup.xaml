@@ -23,15 +23,25 @@
                    HorizontalTextAlignment="Center" 
                    TextColor="Black"/>
 
-            <Label Text="This action cannot be undone"
+            <Label Text="This action cannot be undone."
                    TextColor="Red"
                    FontAttributes="Bold" 
                    TextDecorations="Underline"
                    HorizontalTextAlignment="Center" />
 
             <HorizontalStackLayout Spacing="35" HorizontalOptions="Center" Margin="0,20,0,0">
-                <Button Text="Cancel" Clicked="OnCancelClicked" BackgroundColor="LightGray" TextColor="Black" FontAttributes="Bold" WidthRequest="100" />
-                <Button Text="Remove" Clicked="OnConfirmClicked" BackgroundColor="Red" TextColor="White" FontAttributes="Bold" WidthRequest="100" />
+                <Button Text="Cancel" 
+                        Clicked="OnCancelClicked" 
+                        BackgroundColor="LightGray" 
+                        TextColor="Black" 
+                        FontAttributes="Bold" 
+                        WidthRequest="100" />
+                <Button Text="Remove" 
+                        Clicked="OnConfirmClicked" 
+                        BackgroundColor="Red" 
+                        TextColor="White" 
+                        FontAttributes="Bold" 
+                        WidthRequest="100" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </Border>
