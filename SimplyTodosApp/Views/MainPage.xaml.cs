@@ -4,11 +4,11 @@ namespace SimplyTodosApp
 {
     public partial class MainPage : ContentPage
     {
-
         public MainPage(MainViewModel vm)
         {
             InitializeComponent();
             BindingContext = vm;
+            TodayDate.Text = DateTime.Now.ToString("MMM dd, yyyy");
         }
 
         private void TodosBtn_Clicked(object sender, EventArgs e)

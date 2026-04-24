@@ -73,16 +73,17 @@ public partial class ModifyTaskPopup : Popup<Task>
 
         if (!isHeadingValid || !isDescriptionValid)
         {
-            if (!isHeadingValid)
-            { 
-                //Notify user
-                await Toast.Make("The task heading should be between 1 to 100 characters.").Show();
-            }
 
             if (!isDescriptionValid)
             {
                 //Notify user
                 await Toast.Make("The task description should not be exceeding 1000 characters.").Show();
+            }
+
+            if (!isHeadingValid)
+            { 
+                //Notify user
+                await Toast.Make("The task heading should be between 1 to 100 characters.").Show();
             }
 
             try
