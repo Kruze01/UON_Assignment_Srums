@@ -32,7 +32,19 @@
 
             <HorizontalStackLayout Grid.Row="1" Spacing="5">
                 <Label Text="Priority:" FontSize="14" TextColor="Gray" />
-                <Label Text="{Binding Priority}" FontSize="14" FontAttributes="Bold" />
+                <Label Text="{Binding Priority}" FontSize="14" FontAttributes="Bold">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="High">
+                            <Setter Property="TextColor" Value="Red" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="Medium">
+                            <Setter Property="TextColor" Value="Orange" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="Low">
+                            <Setter Property="TextColor" Value="Black" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
             </HorizontalStackLayout>
 
             <Grid Grid.Row="2" RowDefinitions="Auto, *">
