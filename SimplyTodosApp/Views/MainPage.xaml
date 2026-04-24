@@ -27,7 +27,7 @@
                 <Button x:Name="CompletionsBtn" BackgroundColor="GhostWhite" Grid.Column="1" Clicked="CompletionsBtn_Clicked" Text="Completions" TextColor="Black"></Button>
             </Grid>
 
-            <CollectionView Grid.Row="2" ItemsSource="{Binding TasksList}" EmptyView="No task to display...">
+            <CollectionView Grid.Row="2" ItemsSource="{Binding TasksList}" EmptyView="No task to display..." ItemSizingStrategy="MeasureFirstItem">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Task">
                         <VerticalStackLayout>
