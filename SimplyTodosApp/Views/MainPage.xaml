@@ -3,11 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:SimplyTodosApp.ViewModels"
              xmlns:models="clr-namespace:SimplyTodosApp.Models"
+             xmlns:converters="clr-namespace:SimplyTodosApp.Converters"
              x:DataType="viewmodels:MainViewModel"
              x:Class="SimplyTodosApp.MainPage"
              Shell.NavBarIsVisible="False">
-
-    <AbsoluteLayout>
+    
+    <ContentPage.Resources>
+        <converters:PriorityToColorConverter x:Key="PriorityColorConverter" />
+        <converters:TodosViewConverter x:Key="TodosViewConverter" />
+    </ContentPage.Resources>
+    
+    <Grid>
 
         <Grid RowDefinitions="75, 50, *"     
               RowSpacing="10"
@@ -16,91 +22,135 @@
               AbsoluteLayout.LayoutFlags="All"
               BackgroundColor="White">
 
-            <Grid ColumnDefinitions="Auto,*,50" BackgroundColor="#00BFFF">
-                <Label x:Name="TodayDate" Grid.Column="0" Text="" TextColor="white" VerticalOptions="Center" HorizontalOptions="Center" FontSize="15" FontAttributes="Bold" HorizontalTextAlignment="Center" Padding="5"></Label>
-                <Label Grid.Column="1" Text="Simply To-dos" TextColor="white" VerticalOptions="Center" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold" Margin="0,0,40,0" ></Label>
-                <ImageButton Grid.Column="2" Source="questionmark.svg" Margin="0,0,10,0" Clicked="ImageButton_Clicked"></ImageButton>
+            <Grid ColumnDefinitions="Auto,*,50" 
+                  BackgroundColor="#00BFFF">
+                <Label x:Name="TodayDate" 
+                       Grid.Column="0" 
+                       TextColor="white" 
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center" 
+                       FontSize="15" FontAttributes="Bold" 
+                       HorizontalTextAlignment="Center" 
+                       Padding="5" />
+                <Label Grid.Column="1" 
+                       Text="Simply To-dos" 
+                       TextColor="white" 
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center" 
+                       FontSize="20" 
+                       FontAttributes="Bold" 
+                       Margin="0,0,40,0" />
+                <ImageButton Grid.Column="2" 
+                             Source="questionmark.svg" 
+                             Margin="0,0,10,0" 
+                             Clicked="ImageButton_Clicked" />
             </Grid>
 
             <Grid ColumnDefinitions="*,*" Grid.Row="1">
-                <Button x:Name="TodosBtn" BackgroundColor="Gray" Grid.Column="0" Clicked="TodosBtn_Clicked" Text="To-dos" TextColor="White"></Button>
-                <Button x:Name="CompletionsBtn" BackgroundColor="GhostWhite" Grid.Column="1" Clicked="CompletionsBtn_Clicked" Text="Completions" TextColor="Black"></Button>
+                <Button x:Name="TodosBtn" 
+                        BackgroundColor="Gray" 
+                        Grid.Column="0" 
+                        Clicked="TodosBtn_Clicked" 
+                        Text="To-dos" 
+                        TextColor="White" />
+                <Button x:Name="CompletionsBtn" 
+                        BackgroundColor="GhostWhite" 
+                        Grid.Column="1" 
+                        Clicked="CompletionsBtn_Clicked" 
+                        Text="Completions" 
+                        TextColor="Black" />
             </Grid>
 
-            <CollectionView Grid.Row="2" ItemsSource="{Binding TasksList}" EmptyView="No task to display..." ItemSizingStrategy="MeasureFirstItem">
+            <CollectionView Grid.Row="2" 
+                            ItemsSource="{Binding TasksList}" 
+                            EmptyView="No task to display..." 
+                            ItemSizingStrategy="MeasureAllItems">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Task">
-                        <VerticalStackLayout>
-                            <Grid ColumnDefinitions="*,6*,60,60"  HeightRequest="125" Padding="10,0,20,0">
-                                <CheckBox Grid.Column="0" VerticalOptions="Center" IsChecked="{Binding IsCompleted}" Color="Black" >
-                                    <CheckBox.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ToggleCompleteCommand}" CommandParameter="{Binding .}" />
-                                    </CheckBox.GestureRecognizers>
-                                </CheckBox>
+                        <Grid RowDefinitions="50,*,1" 
+                              ColumnDefinitions="*,6*,60,60" 
+                              Padding="10,0,20,0">
 
-                                <Grid Grid.Column="1" RowDefinitions="50,*" VerticalOptions="Center">
-                                    <Label Text="{Binding Heading}" Grid.Row="0" FontAttributes="Bold" FontSize="Medium" MaxLines="2" LineBreakMode="TailTruncation" VerticalTextAlignment="Center">
-                                        <Label.Triggers>
-                                            <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="High">
-                                                <Setter Property="TextColor" Value="Red" />
-                                            </DataTrigger>
-                                            <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="Medium">
-                                                <Setter Property="TextColor" Value="Orange" />
-                                            </DataTrigger>
-                                            <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="Low">
-                                                <Setter Property="TextColor" Value="Black" />
-                                            </DataTrigger>
-                                        </Label.Triggers>
-                                    </Label>
-                                    <Label Text="{Binding Description}" Grid.Row="1" TextColor="Black" MaxLines="3" LineBreakMode="TailTruncation" VerticalTextAlignment="Start"/>
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ReviewTaskCommand}" CommandParameter="{Binding .}" />
-                                    </Grid.GestureRecognizers>
-                                </Grid>
+                            <BoxView Grid.Row="2"
+                                     Grid.ColumnSpan="4"
+                                     HeightRequest="1"
+                                     Color="Black"
+                                     HorizontalOptions="Fill" />
 
-                                <!-- Edit Task Button for Todos View -->
-                                <ImageButton x:Name="EditTaskBtn" 
-                                             Grid.Column="2" 
-                                             Source="pen.svg"  
-                                             HeightRequest="40" 
+                            <CheckBox Grid.Row="0"
+                                      Grid.RowSpan="2"
+                                      Grid.Column="0"
+                                      VerticalOptions="Center"
+                                      IsChecked="{Binding IsCompleted}"
+                                      Color="Black" >
+                                <CheckBox.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ToggleCompleteCommand}" 
+                                                              CommandParameter="{Binding .}" />
+                                </CheckBox.GestureRecognizers>
+                            </CheckBox>
+
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   Text="{Binding Heading}" 
+                                   FontAttributes="Bold" 
+                                   FontSize="Medium" 
+                                   MaxLines="2" 
+                                   LineBreakMode="TailTruncation" 
+                                   VerticalTextAlignment="Center" 
+                                   TextColor="{Binding Priority, Converter={StaticResource PriorityColorConverter}}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ReviewTaskCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding Description}"
+                                   TextColor="Black"
+                                   MaxLines="3"
+                                   LineBreakMode="TailTruncation"
+                                   VerticalTextAlignment="Start"
+                                   Margin="0,0,0,10">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ReviewTaskCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+
+                            <!-- Edit Task Button for Todos View -->
+                            <ImageButton x:Name="EditTaskBtn" 
+                                             IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted, Converter={StaticResource TodosViewConverter}}"
+                                             Grid.Row="0"
+                                             Grid.RowSpan="2"
+                                             Grid.Column="2"
+                                             Source="pen.svg"
+                                             HeightRequest="40"
                                              WidthRequest="40"
-                                             HorizontalOptions="End"  
-                                             VerticalOptions="Center" 
-                                             IsEnabled="True"
-                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=EditTaskCommand}"
-                                             CommandParameter="{Binding .}">
-                                    <ImageButton.Triggers>
-                                        <DataTrigger TargetType="ImageButton" 
-                                                     Binding="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}" 
-                                                     Value="True">
-                                            <Setter Property="IsVisible" Value="False" />
-                                        </DataTrigger>
-                                    </ImageButton.Triggers>
-                                </ImageButton>
-
-                                <!-- Delete Tasks Button for Todos View -->
-                                <ImageButton x:Name="DeleteTaskBtn" 
-                                             Grid.Column="3" 
-                                             Source="trashbin.png"
-                                             CornerRadius="5"
-                                             HeightRequest="40" 
-                                             WidthRequest="40"
-                                             BackgroundColor="Red" 
-                                             HorizontalOptions="End"  
+                                             HorizontalOptions="End"
                                              VerticalOptions="Center"
-                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=RemoveTaskCommand}"
-                                             CommandParameter="{Binding .}">
-                                    <ImageButton.Triggers>
-                                        <DataTrigger TargetType="ImageButton" 
-                                                     Binding="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}" 
-                                                     Value="True">
-                                            <Setter Property="IsVisible" Value="False" />
-                                        </DataTrigger>
-                                    </ImageButton.Triggers>
-                                </ImageButton>
+                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=EditTaskCommand}"
+                                             CommandParameter="{Binding .}" />
 
-                                <!-- Checkbox to select a task as to be removed, for Completions View -->
-                                <Border Grid.Column="3"
+                            <!-- Delete Tasks Button for Todos View -->
+                            <ImageButton x:Name="DeleteTaskBtn" 
+                                         IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted, Converter={StaticResource TodosViewConverter}}"
+                                         Grid.Row="0"
+                                         Grid.RowSpan="2"
+                                         Grid.Column="3"
+                                         Source="trashbin.png"
+                                         CornerRadius="5"
+                                         HeightRequest="40"
+                                         WidthRequest="40"
+                                         BackgroundColor="Red"
+                                         HorizontalOptions="End"
+                                         VerticalOptions="Center"
+                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=RemoveTaskCommand}"
+                                         CommandParameter="{Binding .}" />
+
+                            <!-- Selection cicrcle to select a task as to be removed, for Completions View -->
+                            <Border Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="3"
                                     HeightRequest="30"
                                     WidthRequest="30"
                                     Stroke="Black"
@@ -109,70 +159,67 @@
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"
                                     IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}" >
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="30" />
-                                    </Border.StrokeShape>
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="30" />
+                                </Border.StrokeShape>
 
-                                    <Image Source="tick.svg" 
+                                <Image x:Name="TickIcon"
+                                       Source="tick.svg" 
                                        HeightRequest="20"
                                        WidthRequest="20"
                                        Aspect="AspectFit"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
-                                       Scale="0"
-                                       x:Name="TickIcon" />
+                                       Scale="0" />
 
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=SelectCompletedTaskCommand}"
-                                                          CommandParameter="{Binding .}" 
-                                                          Tapped="TickIcon_Tapped"/>
-                                    </Border.GestureRecognizers>
-                                </Border>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=SelectCompletedTaskCommand}"
+                              CommandParameter="{Binding .}" />
+                                    <TapGestureRecognizer Tapped="TickIcon_Tapped" />
+                                </Border.GestureRecognizers>
+                            </Border>
 
-                            </Grid>
-
-                            <BoxView HeightRequest="1" Color="Black" HorizontalOptions="Fill" />
-
-                        </VerticalStackLayout>
+                        </Grid>
+                        
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
         </Grid>
 
-        <!-- Add Selected Tasks Button for Todos View -->
+        <!-- Add New Task Button for Todos View -->
         <ImageButton  
             x:Name="AddTaskBtn"
+            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted, Converter={StaticResource TodosViewConverter}}"
             Source="plus.svg"
             WidthRequest="70"
             HeightRequest="70"
             CornerRadius="35"
             Padding="0"
             Aspect="AspectFit"
-            AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
-            AbsoluteLayout.LayoutFlags="PositionProportional"
             HorizontalOptions="Center"
-            VerticalOptions="Center"
+            VerticalOptions="End"
+            Margin="0,0,0,30"
+            ZIndex="1"
             Command="{Binding AddTaskCommand}" />
 
 
         <!-- Delete Selected Tasks Button for Completions View -->
         <ImageButton
             x:Name="DeleteSelectedTasksBtn"
-            IsVisible="False"
+            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ShowOnlyCompleted}"
             Source="trashbin.svg"
             WidthRequest="70"
             HeightRequest="70"
             CornerRadius="35"
-            Padding="0" 
+            Padding="0"
             Aspect="AspectFit"
-            AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
-            AbsoluteLayout.LayoutFlags="PositionProportional"
             HorizontalOptions="Center"
-            VerticalOptions="Center"
-            Command="{Binding RemoveSelectedTasksHistoryCommand}"
-            />
+            VerticalOptions="End"
+            Margin="0,0,0,30"
+            ZIndex="1"
+            Command="{Binding RemoveSelectedTasksHistoryCommand}" />
      
-    </AbsoluteLayout>
+    </Grid>
 
 </ContentPage>

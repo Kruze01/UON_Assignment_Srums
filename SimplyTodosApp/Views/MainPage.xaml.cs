@@ -9,7 +9,7 @@ namespace SimplyTodosApp
     - Use the buttons at the top to toggle between your 'To-dos' (ongoing tasks) and 'Completions' (completed tasks).
 
 2. Creating a New Task: 
-    - Tap the '+' button. 
+    - Tap the Add button (plus icon). 
     - Enter a Heading, Description, and select a Priority.
     - Tap 'Save'.
 
@@ -17,10 +17,10 @@ namespace SimplyTodosApp
     - Tap any task in the list to review details.
 
 4. Editing Task:
-    - Use the Edit button (pen icon) to modify tasks.
+    - Tap the Edit button (pen icon) to modify tasks.
 
 5. Remove Task: 
-    - Use the Remove button (trashbin icon) to modify tasks.
+    - Tap the Remove button (trashbin icon) to modify tasks.
 
 6. Marking Task as Completed: 
     - Tap the square box in the task row to mark it as done. 
@@ -32,9 +32,9 @@ namespace SimplyTodosApp
 
 8. Removing Completed Tasks: 
     - In the Completions view, tap the circle on the right to select a completed task.
-    - Use the Remove button (trashbin icon) to delete selected completed tasks.
+    - Tap the Remove button (trashbin icon) to delete selected completed tasks.
 
-Helpful tip: The task heading's color change according to task's priority. (i.e., Red for high proiority, Orange for medium priority, Black for low prioity.)";
+Helpful tip: The task heading's color change according to task's priority. (i.e., Red for high proiority, Orange for medium priority, Green for low priority, and Black for no prioity.)";
     
         public MainPage(MainViewModel vm)
         {
@@ -52,8 +52,6 @@ Helpful tip: The task heading's color change according to task's priority. (i.e.
                 TodosBtn.TextColor = Colors.White;
                 CompletionsBtn.BackgroundColor = Colors.GhostWhite;
                 CompletionsBtn.TextColor = Colors.Black;
-                AddTaskBtn.IsVisible = true;
-                DeleteSelectedTasksBtn.IsVisible = false;
             }
         }
 
@@ -66,8 +64,6 @@ Helpful tip: The task heading's color change according to task's priority. (i.e.
                 TodosBtn.TextColor = Colors.Black;
                 CompletionsBtn.BackgroundColor = Colors.Gray;
                 CompletionsBtn.TextColor = Colors.White;
-                AddTaskBtn.IsVisible = false;
-                DeleteSelectedTasksBtn.IsVisible = true;
             }
         }
 
@@ -78,14 +74,9 @@ Helpful tip: The task heading's color change according to task's priority. (i.e.
 
         private void TickIcon_Tapped(object sender, TappedEventArgs e)
         {
-            if (sender is Border border)
+            if (sender is Border border && border.Content is Image img)
             {
-                var tick = border.FindByName("TickIcon");
-
-                if (tick is Image img)
-                {
-                    img.Scale = img.Scale == 0 ? 1 : 0; //If Image scale is 0 -> change 1, and vice versa.. (Scale 0 = disappear)
-                }
+                img.ScaleToAsync(img.Scale == 0 ? 1 : 0, 150); //Animate the tick icon
             }
         }
     }

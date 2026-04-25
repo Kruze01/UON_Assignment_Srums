@@ -5,28 +5,22 @@ namespace SimplyTodosApp.Services;
 
 public class DatabaseService
 {
-    private SQLiteAsyncConnection _database;
+    private readonly SQLiteAsyncConnection _database;
 
-    async System.Threading.Tasks.Task Init()
+    public DatabaseService()
     {
-        if (_database is not null)
-            return;
-
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "MyTasks.db");
-
         _database = new SQLiteAsyncConnection(dbPath);
-        await _database.CreateTableAsync<Task>();
+        _database.CreateTableAsync<Task>().Wait();
     }
 
     public async Task<List<Task>> GetTasksAsync()
     {
-        await Init();
         return await _database.Table<Task>().ToListAsync();
     }
 
     public async Task<int> SaveTaskAsync(Task task)
     {
-        await Init();
         if (task.Id != 0)   //If task has Id, it's existing task
             return await _database.UpdateAsync(task);   //If existing task, update
         else
@@ -35,7 +29,17 @@ public class DatabaseService
 
     public async Task<int> DeleteTaskAsync(Task task)
     {
-        await Init();
         return await _database.DeleteAsync(task);
+    }
+
+    public async System.Threading.Tasks.Task DeleteAllAsync(IEnumerable<Task> tasks)
+    {
+        await _database.RunInTransactionAsync(trans =>
+        {
+            foreach (var task in tasks)
+            {
+                trans.Delete(task);
+            }
+        });
     }
 }

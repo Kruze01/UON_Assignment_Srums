@@ -16,7 +16,7 @@ public partial class ModifyTaskPopup : Popup<Task>
         if (existingTask == null)   //if no parameter, create new task
         {
             PopupHeading.Text = "Add New Task";
-            BindingContext = new Task { Priority = "Low", IsCompleted = false };
+            BindingContext = new Task { Priority = "None", IsCompleted = false };
         }
         else                        // else, clone and edit existing content
         {

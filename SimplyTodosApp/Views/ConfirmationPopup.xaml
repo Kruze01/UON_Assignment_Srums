@@ -29,7 +29,9 @@
                    TextDecorations="Underline"
                    HorizontalTextAlignment="Center" />
 
-            <HorizontalStackLayout Spacing="35" HorizontalOptions="Center" Margin="0,20,0,0">
+            <HorizontalStackLayout Spacing="35" 
+                                   HorizontalOptions="Center" 
+                                   Margin="0,20,0,0">
                 <Button Text="Cancel" 
                         Clicked="OnCancelClicked" 
                         BackgroundColor="LightGray" 

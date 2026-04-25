@@ -7,13 +7,22 @@
                x:TypeArguments="models:Task"
                CanBeDismissedByTappingOutsideOfPopup="False">
 
-    <Border StrokeThickness="2" Stroke="Gray" BackgroundColor="White" Padding="20" WidthRequest="350">
+    <Border StrokeThickness="2" 
+            Stroke="Gray" 
+            BackgroundColor="White" 
+            Padding="20" 
+            WidthRequest="350">
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="20" />
         </Border.StrokeShape>
 
         <VerticalStackLayout Spacing="15">
-            <Label x:Name="PopupHeading" FontSize="25" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20" TextColor="Black" />
+            <Label x:Name="PopupHeading" 
+                   FontSize="25" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   Margin="0,0,0,20" 
+                   TextColor="Black" />
 
             <Border StrokeThickness="0">
                 <VerticalStackLayout Spacing="2">
@@ -55,21 +64,36 @@
             <Border StrokeThickness="0">
                 <VerticalStackLayout>
                     <Label Text="Select Priority : " TextColor="Black" />
-                    <Picker Title="Select Priority" SelectedItem="{Binding Priority}" TextColor="Black" BackgroundColor="#fafafa" >
+                    <Picker Title="Select Priority" 
+                            SelectedItem="{Binding Priority}" 
+                            TextColor="Black" BackgroundColor="#fafafa" >
                         <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>High</x:String>
                                 <x:String>Medium</x:String>
                                 <x:String>Low</x:String>
+                                <x:String>None</x:String>
                             </x:Array>
                         </Picker.ItemsSource>
                     </Picker>
                 </VerticalStackLayout>
             </Border>
 
-            <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" Margin="0,20,0,0">
-                <Button Text="Cancel" Clicked="OnCancelClicked" BackgroundColor="LightGray" TextColor="Black" FontAttributes="Bold" WidthRequest="100" />
-                <Button Text="Save" Clicked="OnSaveClicked" BackgroundColor="DodgerBlue" TextColor="White" FontAttributes="Bold" WidthRequest="100" />
+            <HorizontalStackLayout Spacing="20" 
+                                   HorizontalOptions="Center" 
+                                   Margin="0,20,0,0">
+                <Button Text="Cancel" 
+                        Clicked="OnCancelClicked" 
+                        BackgroundColor="LightGray" 
+                        TextColor="Black" 
+                        FontAttributes="Bold" 
+                        WidthRequest="100" />
+                <Button Text="Save" 
+                        Clicked="OnSaveClicked" 
+                        BackgroundColor="DodgerBlue" 
+                        TextColor="White" 
+                        FontAttributes="Bold" 
+                        WidthRequest="100" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </Border>

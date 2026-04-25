@@ -7,16 +7,20 @@ using SimplyTodosApp.Services;
 using SimplyTodosApp.Views;
 using System.Collections.ObjectModel;
 using Task = SimplyTodosApp.Models.Task;
+using System.Diagnostics;
 
 namespace SimplyTodosApp.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
-        
         readonly DatabaseService _dbService;
+        private List<Task> _allTasksCache = new();  //Cache tasks in memory
 
         [ObservableProperty]
         ObservableCollection<Task> _tasksList = new();  //List of tasks to bind in MainPage
+
+        //List of selected completed-tasks to be removed in Completions View
+        List<Task> TasksToDeleteList = new();
 
         [ObservableProperty]
         bool _showOnlyCompleted;    //For task display control
@@ -24,24 +28,32 @@ namespace SimplyTodosApp.ViewModels
         //For changing tasks to display when the Views change
         partial void OnShowOnlyCompletedChanged(bool value)
         {
-            LoadTasks();
+            _=ApplyFilterAsync();
+            TasksToDeleteList.Clear();
         }
 
         public MainViewModel(DatabaseService dbService)
         {
             _dbService = dbService;
-            LoadTasks();
+            _ = LoadTasksFromDbAsync();
         }
 
-        //For filtering which tasks to be displayed on Todos View and on Completion View
-        async void LoadTasks()
+        async System.Threading.Tasks.Task LoadTasksFromDbAsync()
         {
-            var allTasks = await _dbService.GetTasksAsync();
-            TasksList.Clear();
+            _allTasksCache = await _dbService.GetTasksAsync();
+            await ApplyFilterAsync();
+        }
 
-            var filtered = _showOnlyCompleted ? allTasks.Where(t => t.IsCompleted) : allTasks.Where(t => !t.IsCompleted);
-            foreach (var task in filtered)
-                TasksList.Add(task);
+        async System.Threading.Tasks.Task ApplyFilterAsync()
+        {
+            var filtered = await System.Threading.Tasks.Task.Run(() =>
+            {
+                return _showOnlyCompleted ? _allTasksCache.Where(t => t.IsCompleted).ToList() : _allTasksCache.Where(t => !t.IsCompleted).ToList();
+            });
+
+            MainThread.BeginInvokeOnMainThread(() =>
+                TasksList = new ObservableCollection<Task>(filtered)
+            );
         }
 
         //For adding a new task
@@ -55,14 +67,10 @@ namespace SimplyTodosApp.ViewModels
 
             if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is Task newTask && !string.IsNullOrWhiteSpace(newTask.Heading))
             {
-                //Save to SQLite
                 await _dbService.SaveTaskAsync(newTask);
-
-                //Notify user
                 await Toast.Make("A new task has been created successfully!").Show();
-
-                //Add to UI list
-                TasksList.Add(newTask);
+                _allTasksCache.Add(newTask);  //Sync cache
+                await ApplyFilterAsync();
             }
         }
 
@@ -72,24 +80,19 @@ namespace SimplyTodosApp.ViewModels
         async System.Threading.Tasks.Task EditTask(Task taskToEdit)
         {
             var popup = new ModifyTaskPopup(taskToEdit);
+            var result = await Shell.Current.CurrentPage.ShowPopupAsync<Task>(popup);
 
-            var result = await Shell.Current.CurrentPage.ShowPopupAsync(new ModifyTaskPopup(taskToEdit)) as IPopupResult<Task>;
-
-            if (!result.WasDismissedByTappingOutsideOfPopup && result != null && result.Result != null)
+            if (!result.WasDismissedByTappingOutsideOfPopup && result.Result is Task updatedTask)
             {
-                var updatedTask = result.Result;
                 taskToEdit.Heading = updatedTask.Heading;
                 taskToEdit.Description = updatedTask.Description;
                 taskToEdit.Priority = updatedTask.Priority;
 
-                //Update in SQLite
                 await _dbService.SaveTaskAsync(taskToEdit);
-
-                //Notify user
                 await Toast.Make("Task has been updated successfully!").Show();
 
-                //Refresh UI list
-                LoadTasks();
+                //Task object is mutated in-place inside the cache — just re-filter
+                await ApplyFilterAsync();
             }
         }
 
@@ -103,18 +106,14 @@ namespace SimplyTodosApp.ViewModels
 
             var popup = new ConfirmationPopup("Remove Task", "Are you sure you want to remove the task ?");
             var result = await Shell.Current.CurrentPage.ShowPopupAsync<bool>(popup);
-            bool confirmed = result != null && !result.WasDismissedByTappingOutsideOfPopup && result.Result;
-            if (!confirmed)
+            if (result == null || result.WasDismissedByTappingOutsideOfPopup || !result.Result)
                 return;
 
-            //Remove from SQLite
             await _dbService.DeleteTaskAsync(task);
-
-            //Notify user
             await Toast.Make("Task has been removed successfully!").Show();
 
-            //Remove from UI list
-            TasksList.Remove(task);
+            _allTasksCache.Remove(task);  //Sync cache
+            await ApplyFilterAsync();
         }
 
         //For changing a task's IsCompleted attribute
@@ -127,15 +126,10 @@ namespace SimplyTodosApp.ViewModels
 
             string textForToast = task.IsCompleted ? "Task has been marked as incompleted." : "Task has been marked as completed.";
 
-            //Update in SQLite
             task.IsCompleted = !task.IsCompleted;
             await _dbService.SaveTaskAsync(task);
-
-            //Notify user
             await Toast.Make(textForToast).Show();
-
-            //Update in UI list
-            LoadTasks();
+            await ApplyFilterAsync();
         }
 
         //For reviewing a Task
@@ -146,17 +140,13 @@ namespace SimplyTodosApp.ViewModels
             if (task == null)
                 return;
 
-            var popup = new ReviewTaskPopup(task);
-            await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+            await Shell.Current.CurrentPage.ShowPopupAsync(new ReviewTaskPopup(task));
         }
-
-        //List of selected completed-tasks to be removed in Completions View
-        List<Task> TasksToDeleteList = new();
 
         //Selecting and Deselecting completed task to be removed
 
         [RelayCommand]
-        async void SelectCompletedTask(Task task)
+        void SelectCompletedTask(Task task)
         {
             if (task == null)
                 return;
@@ -181,18 +171,17 @@ namespace SimplyTodosApp.ViewModels
 
             var popup = new ConfirmationPopup("Clear Tasks", "Are you sure you want to remove all selected tasks that are completed?");
             var result = await Shell.Current.CurrentPage.ShowPopupAsync<bool>(popup);
-            bool confirmed = result != null && !result.WasDismissedByTappingOutsideOfPopup && result.Result;
-
-            if (!confirmed)
+            if (result == null || result.WasDismissedByTappingOutsideOfPopup || !result.Result)
                 return;
 
+            await _dbService.DeleteAllAsync(TasksToDeleteList);
+
             foreach (var task in TasksToDeleteList)
-                await _dbService.DeleteTaskAsync(task);
+                _allTasksCache.Remove(task);  //Sync cache
 
-            //Notify user
+            TasksToDeleteList.Clear();
             await Toast.Make("Selected tasks have been removed successfully!").Show();
-
-            LoadTasks();
+            await ApplyFilterAsync();
         }
     }
 }
