@@ -12,6 +12,7 @@ namespace SimplyTodosApp.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
+        
         readonly DatabaseService _dbService;
 
         [ObservableProperty]

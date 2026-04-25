@@ -16,9 +16,9 @@
               AbsoluteLayout.LayoutFlags="All"
               BackgroundColor="White">
 
-            <Grid ColumnDefinitions="Auto,*,50" BackgroundColor="GhostWhite">
-                <Label Grid.Column="0" Text="March 16 2026" TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center" FontSize="15" HorizontalTextAlignment="Center" Padding="5"></Label>
-                <Label Grid.Column="1" Text="Simply To-dos" TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold" Margin="0,0,40,0" ></Label>
+            <Grid ColumnDefinitions="Auto,*,50" BackgroundColor="#00BFFF">
+                <Label x:Name="TodayDate" Grid.Column="0" Text="" TextColor="white" VerticalOptions="Center" HorizontalOptions="Center" FontSize="15" FontAttributes="Bold" HorizontalTextAlignment="Center" Padding="5"></Label>
+                <Label Grid.Column="1" Text="Simply To-dos" TextColor="white" VerticalOptions="Center" HorizontalOptions="Center" FontSize="20" FontAttributes="Bold" Margin="0,0,40,0" ></Label>
                 <ImageButton Grid.Column="2" Source="questionmark.svg" Margin="0,0,10,0" Clicked="ImageButton_Clicked"></ImageButton>
             </Grid>
 
@@ -27,20 +27,32 @@
                 <Button x:Name="CompletionsBtn" BackgroundColor="GhostWhite" Grid.Column="1" Clicked="CompletionsBtn_Clicked" Text="Completions" TextColor="Black"></Button>
             </Grid>
 
-            <CollectionView Grid.Row="2" ItemsSource="{Binding TasksList}" EmptyView="No task to display...">
+            <CollectionView Grid.Row="2" ItemsSource="{Binding TasksList}" EmptyView="No task to display..." ItemSizingStrategy="MeasureFirstItem">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Task">
                         <VerticalStackLayout>
-                            <Grid ColumnDefinitions="*,6*,60,60"  HeightRequest="100" Padding="10,0,20,0">
+                            <Grid ColumnDefinitions="*,6*,60,60"  HeightRequest="125" Padding="10,0,20,0">
                                 <CheckBox Grid.Column="0" VerticalOptions="Center" IsChecked="{Binding IsCompleted}" Color="Black" >
                                     <CheckBox.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ToggleCompleteCommand}" CommandParameter="{Binding .}" />
                                     </CheckBox.GestureRecognizers>
                                 </CheckBox>
 
-                                <Grid Grid.Column="1" RowDefinitions="40,*" VerticalOptions="Center">
-                                    <Label Text="{Binding Heading}" Grid.Row="0" FontAttributes="Bold" FontSize="Medium" TextColor="Black" LineBreakMode="TailTruncation" />
-                                    <Label Text="{Binding Description}" Grid.Row="1" TextColor="Black" LineBreakMode="TailTruncation" />
+                                <Grid Grid.Column="1" RowDefinitions="50,*" VerticalOptions="Center">
+                                    <Label Text="{Binding Heading}" Grid.Row="0" FontAttributes="Bold" FontSize="Medium" MaxLines="2" LineBreakMode="TailTruncation" VerticalTextAlignment="Center">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="High">
+                                                <Setter Property="TextColor" Value="Red" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="Medium">
+                                                <Setter Property="TextColor" Value="Orange" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="Low">
+                                                <Setter Property="TextColor" Value="Black" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <Label Text="{Binding Description}" Grid.Row="1" TextColor="Black" MaxLines="3" LineBreakMode="TailTruncation" VerticalTextAlignment="Start"/>
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=ReviewTaskCommand}" CommandParameter="{Binding .}" />
                                     </Grid.GestureRecognizers>
@@ -129,38 +141,20 @@
         </Grid>
 
         <!-- Add Selected Tasks Button for Todos View -->
-        <Button  x:Name="AddTaskBtn "
-                 Text="+"
-                 FontSize="36"
-                 FontAttributes="Bold"
-                 WidthRequest="70"
-                 HeightRequest="70"
-                 CornerRadius="35"
-                 BackgroundColor="DodgerBlue"
-                 TextColor="White"
-                 Padding="0"
-                 AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
-                 AbsoluteLayout.LayoutFlags="PositionProportional"
-                 Command="{Binding AddTaskCommand}" />
+        <ImageButton  
+            x:Name="AddTaskBtn"
+            Source="plus.svg"
+            WidthRequest="70"
+            HeightRequest="70"
+            CornerRadius="35"
+            Padding="0"
+            Aspect="AspectFit"
+            AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Command="{Binding AddTaskCommand}" />
 
-
-        <!--
-        <Button  x:Name="DeleteSelectedTasksBtn"
-                 IsVisible="False"
-                 Text="-"
-                 FontSize="36"
-                 FontAttributes="Bold"
-                 WidthRequest="70"
-                 HeightRequest="70"
-                 CornerRadius="35"
-                 BackgroundColor="Red"
-                 TextColor="White"
-                 Padding="0"
-                 AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
-                 AbsoluteLayout.LayoutFlags="PositionProportional"
-                 Command="{Binding RemoveSelectedTasksHistoryCommand}" />
-
-        -->
 
         <!-- Delete Selected Tasks Button for Completions View -->
         <ImageButton
@@ -170,43 +164,15 @@
             WidthRequest="70"
             HeightRequest="70"
             CornerRadius="35"
-            Padding="0" Aspect="AspectFit"
+            Padding="0" 
+            Aspect="AspectFit"
             AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
             AbsoluteLayout.LayoutFlags="PositionProportional"
             HorizontalOptions="Center"
             VerticalOptions="Center"
             Command="{Binding RemoveSelectedTasksHistoryCommand}"
             />
-        <!--
-        <Border 
-            x:Name="DeleteSelectedTasksBtn"
-            HeightRequest="70"
-            WidthRequest="70"
-            StrokeThickness="0"
-            BackgroundColor="Red"
-            IsVisible="False"
-            AbsoluteLayout.LayoutBounds="0.5, 0.95, 70, 70"
-            AbsoluteLayout.LayoutFlags="PositionProportional"
-            HorizontalOptions="Center"
-            VerticalOptions="Center">
-            
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding RemoveSelectedTasksHistoryCommand}" />
-            </Border.GestureRecognizers>
-            
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="35" />
-            </Border.StrokeShape>
-
-            <Path Fill="White"
-                  HorizontalOptions="Center"
-                  VerticalOptions="Center"
-                  Aspect="Uniform"
-                  HeightRequest="30"
-                  WidthRequest="30"
-                  Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-        </Border>
-                -->
+     
     </AbsoluteLayout>
 
 </ContentPage>
