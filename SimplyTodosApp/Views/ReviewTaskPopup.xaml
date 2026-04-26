@@ -2,8 +2,12 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                xmlns:models="clr-namespace:SimplyTodosApp.Models"
+               xmlns:converters="clr-namespace:SimplyTodosApp.Converters"
                x:Class="SimplyTodosApp.Views.ReviewTaskPopup"
                x:DataType="models:Task">
+    <toolkit:Popup.Resources>
+        <converters:PriorityToColorConverter x:Key="PriorityColorConverter" />
+    </toolkit:Popup.Resources>
 
     <Border StrokeThickness="2" 
             Stroke="Black" 
@@ -18,6 +22,7 @@
 
         <Grid RowDefinitions="Auto, Auto, *, Auto" RowSpacing="10">
 
+            <!-- Scrollable view for task heading-->
             <VerticalStackLayout Grid.Row="0" Spacing="5">
                 <ScrollView MaximumHeightRequest="90">
                 <Label Text="{Binding Heading}" 
@@ -27,28 +32,29 @@
                        HorizontalOptions="Center" 
                        HorizontalTextAlignment="Center" />
                 </ScrollView>
-                <BoxView HeightRequest="1" Color="LightGray" HorizontalOptions="Fill" />
+                <BoxView HeightRequest="1" 
+                         Color="LightGray" 
+                         HorizontalOptions="Fill" />
             </VerticalStackLayout>
 
+            <!-- For task description -->
             <HorizontalStackLayout Grid.Row="1" Spacing="5">
-                <Label Text="Priority:" FontSize="14" TextColor="Gray" />
-                <Label Text="{Binding Priority}" FontSize="14" FontAttributes="Bold">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="High">
-                            <Setter Property="TextColor" Value="Red" />
-                        </DataTrigger>
-                        <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="Medium">
-                            <Setter Property="TextColor" Value="Orange" />
-                        </DataTrigger>
-                        <DataTrigger TargetType="Label" Binding="{Binding Priority}" Value="Low">
-                            <Setter Property="TextColor" Value="Black" />
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
+                <Label Text="Priority:" 
+                       FontSize="14" 
+                       TextColor="Gray" />
+                <Label Text="{Binding Priority}" 
+                       FontSize="14" 
+                       FontAttributes="Bold" 
+                       TextColor="{Binding Priority, Converter={StaticResource PriorityColorConverter}}" />
             </HorizontalStackLayout>
 
+            <!-- Scrollable view for task description-->
             <Grid Grid.Row="2" RowDefinitions="Auto, *">
-                <Label Grid.Row="0" Text="Description:" FontSize="14" TextColor="Gray" Margin="0,0,0,5"/>
+                <Label Grid.Row="0" 
+                       Text="Description:" 
+                       FontSize="14" 
+                       TextColor="Gray" 
+                       Margin="0,0,0,5"/>
 
                 <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always">
                     <Label Text="{Binding Description}" 
@@ -58,6 +64,7 @@
                 </ScrollView>
             </Grid>
 
+            <!-- Close button -->
             <Button Grid.Row="3" 
                     Text="Close" 
                     WidthRequest="100" 

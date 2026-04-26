@@ -11,6 +11,8 @@
         </Border.StrokeShape>
 
         <VerticalStackLayout Spacing="20">
+
+            <!-- Popup title and warning messages -->
             <Label x:Name="PopupHeading"
                    FontSize="25" 
                    FontAttributes="Bold" 
@@ -29,13 +31,18 @@
                    TextDecorations="Underline"
                    HorizontalTextAlignment="Center" />
 
-            <HorizontalStackLayout Spacing="35" HorizontalOptions="Center" Margin="0,20,0,0">
+            <HorizontalStackLayout Spacing="35" 
+                                   HorizontalOptions="Center" 
+                                   Margin="0,20,0,0">
+
+                <!-- Cancel button -->
                 <Button Text="Cancel" 
                         Clicked="OnCancelClicked" 
                         BackgroundColor="LightGray" 
                         TextColor="Black" 
                         FontAttributes="Bold" 
                         WidthRequest="100" />
+                <!-- Remove button -->
                 <Button Text="Remove" 
                         Clicked="OnConfirmClicked" 
                         BackgroundColor="Red" 

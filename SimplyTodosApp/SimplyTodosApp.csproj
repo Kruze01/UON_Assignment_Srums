@@ -66,6 +66,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Converter\**" />
+	  <Compile Remove="Converter\**" />
+	  <EmbeddedResource Remove="Converter\**" />
+	  <MauiCss Remove="Converter\**" />
+	  <MauiXaml Remove="Converter\**" />
+	  <None Remove="Converter\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <AndroidResource Remove="Platforms\Android\Resources\values\themes.xml" />
 	</ItemGroup>
 
