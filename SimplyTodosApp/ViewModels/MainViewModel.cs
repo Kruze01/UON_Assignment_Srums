@@ -7,30 +7,25 @@ using SimplyTodosApp.Services;
 using SimplyTodosApp.Views;
 using System.Collections.ObjectModel;
 using Task = SimplyTodosApp.Models.Task;
-using System.Diagnostics;
 
 namespace SimplyTodosApp.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
         readonly DatabaseService _dbService;
+
         private List<Task> _allTasksCache = new();  //Cache tasks in memory
+
+        List<Task> TasksToDeleteList = new();   //List of selected completed-tasks to be removed in Completions View
 
         [ObservableProperty]
         ObservableCollection<Task> _tasksList = new();  //List of tasks to bind in MainPage
 
-        //List of selected completed-tasks to be removed in Completions View
-        List<Task> TasksToDeleteList = new();
+        [ObservableProperty]
+        bool _showOnlyCompleted;    //For view control (Todos view or Completions view)
 
         [ObservableProperty]
-        bool _showOnlyCompleted;    //For task display control
-
-        //For changing tasks to display when the Views change
-        partial void OnShowOnlyCompletedChanged(bool value)
-        {
-            _=ApplyFilterAsync();
-            TasksToDeleteList.Clear();
-        }
+        string _searchKeyword = string.Empty;   //Keyword in searchbar to filter tasks
 
         public MainViewModel(DatabaseService dbService)
         {
@@ -38,6 +33,21 @@ namespace SimplyTodosApp.ViewModels
             _ = LoadTasksFromDbAsync();
         }
 
+        //For changing tasks to display when the Views change
+        partial void OnShowOnlyCompletedChanged(bool value)
+        {
+            SearchKeyword = string.Empty;   //Clear search when switching views
+            TasksToDeleteList.Clear();      //Clear selected task history
+            _ = ApplyFilterAsync();
+        }
+
+        //Re-filter live as the user types
+        partial void OnSearchKeywordChanged(string value)
+        {
+            _ = ApplyFilterAsync();
+        }
+
+        //Load tasks from database and cache them in memory
         async System.Threading.Tasks.Task LoadTasksFromDbAsync()
         {
             _allTasksCache = await _dbService.GetTasksAsync();
@@ -46,9 +56,23 @@ namespace SimplyTodosApp.ViewModels
 
         async System.Threading.Tasks.Task ApplyFilterAsync()
         {
+            var keyword = SearchKeyword?.Trim() ?? string.Empty;
+
             var filtered = await System.Threading.Tasks.Task.Run(() =>
             {
-                return _showOnlyCompleted ? _allTasksCache.Where(t => t.IsCompleted).ToList() : _allTasksCache.Where(t => !t.IsCompleted).ToList();
+                //Filter by current view (Todos or Completions)
+                var byView = _showOnlyCompleted
+                    ? _allTasksCache.Where(t => t.IsCompleted)
+                    : _allTasksCache.Where(t => !t.IsCompleted);
+
+                //Filter by keyword against Task heading and description (case-insensitive)
+                //If keyword is empty, skip the string comparison
+                if (!string.IsNullOrEmpty(keyword))
+                    byView = byView.Where(t =>
+                        (t.Heading?.Contains(keyword, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                        (t.Description?.Contains(keyword, StringComparison.OrdinalIgnoreCase) ?? false));
+
+                return byView.ToList();
             });
 
             MainThread.BeginInvokeOnMainThread(() =>
@@ -91,7 +115,6 @@ namespace SimplyTodosApp.ViewModels
                 await _dbService.SaveTaskAsync(taskToEdit);
                 await Toast.Make("Task has been updated successfully!").Show();
 
-                //Task object is mutated in-place inside the cache — just re-filter
                 await ApplyFilterAsync();
             }
         }
@@ -124,7 +147,7 @@ namespace SimplyTodosApp.ViewModels
             if (task == null)
                 return;
 
-            string textForToast = task.IsCompleted ? "Task has been marked as incompleted." : "Task has been marked as completed.";
+            string textForToast = task.IsCompleted ? "Task has been marked as incomplete." : "Task has been marked as complete.";
 
             task.IsCompleted = !task.IsCompleted;
             await _dbService.SaveTaskAsync(task);
@@ -144,7 +167,6 @@ namespace SimplyTodosApp.ViewModels
         }
 
         //Selecting and Deselecting completed task to be removed
-
         [RelayCommand]
         void SelectCompletedTask(Task task)
         {
@@ -174,7 +196,7 @@ namespace SimplyTodosApp.ViewModels
             if (result == null || result.WasDismissedByTappingOutsideOfPopup || !result.Result)
                 return;
 
-            await _dbService.DeleteAllAsync(TasksToDeleteList);
+            await _dbService.DeleteAllAsync(TasksToDeleteList); //remove from database
 
             foreach (var task in TasksToDeleteList)
                 _allTasksCache.Remove(task);  //Sync cache

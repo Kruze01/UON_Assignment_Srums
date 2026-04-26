@@ -98,7 +98,7 @@ public partial class ModifyTaskPopup : Popup<Task>
             return;
         }
 
-        //If valid, return the task to the ViewModel
+        //If task is valid, return the task to the ViewModel
         await CloseAsync(BindingContext as Task);
     }
     async void OnCancelClicked(object sender, EventArgs e)

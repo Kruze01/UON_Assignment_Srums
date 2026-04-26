@@ -22,6 +22,7 @@
 
         <Grid RowDefinitions="Auto, Auto, *, Auto" RowSpacing="10">
 
+            <!-- Scrollable view for task heading-->
             <VerticalStackLayout Grid.Row="0" Spacing="5">
                 <ScrollView MaximumHeightRequest="90">
                 <Label Text="{Binding Heading}" 
@@ -36,6 +37,7 @@
                          HorizontalOptions="Fill" />
             </VerticalStackLayout>
 
+            <!-- For task description -->
             <HorizontalStackLayout Grid.Row="1" Spacing="5">
                 <Label Text="Priority:" 
                        FontSize="14" 
@@ -46,6 +48,7 @@
                        TextColor="{Binding Priority, Converter={StaticResource PriorityColorConverter}}" />
             </HorizontalStackLayout>
 
+            <!-- Scrollable view for task description-->
             <Grid Grid.Row="2" RowDefinitions="Auto, *">
                 <Label Grid.Row="0" 
                        Text="Description:" 
@@ -61,6 +64,7 @@
                 </ScrollView>
             </Grid>
 
+            <!-- Close button -->
             <Button Grid.Row="3" 
                     Text="Close" 
                     WidthRequest="100" 

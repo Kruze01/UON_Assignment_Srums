@@ -8,7 +8,7 @@ namespace SimplyTodosApp.Converters
         {
             if (value is bool showOnlyCompleted)
             {
-                return !showOnlyCompleted; //Show when NOT in completed view
+                return !showOnlyCompleted; //Show the element when NOT in Completions view 
             }
             return true;
         }

@@ -34,6 +34,8 @@ public class DatabaseService
 
     public async System.Threading.Tasks.Task DeleteAllAsync(IEnumerable<Task> tasks)
     {
+
+        //Remove all selected tasks at once
         await _database.RunInTransactionAsync(trans =>
         {
             foreach (var task in tasks)

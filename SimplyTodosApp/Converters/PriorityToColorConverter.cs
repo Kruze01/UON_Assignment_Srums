@@ -6,6 +6,7 @@ namespace SimplyTodosApp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            // Change text color based on task priority
             var priority = value?.ToString();
             return priority switch
             {

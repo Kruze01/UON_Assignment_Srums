@@ -7,21 +7,23 @@
              x:DataType="viewmodels:MainViewModel"
              x:Class="SimplyTodosApp.MainPage"
              Shell.NavBarIsVisible="False">
-    
+
     <ContentPage.Resources>
         <converters:PriorityToColorConverter x:Key="PriorityColorConverter" />
         <converters:TodosViewConverter x:Key="TodosViewConverter" />
     </ContentPage.Resources>
-    
+
     <Grid>
 
-        <Grid RowDefinitions="75, 50, *"     
+        <!-- Header : 1. Today Date  2. App name  3. User guide button -->
+        <Grid RowDefinitions="75, 50, 40, *"
               RowSpacing="10"
-              Padding="0,20,0,20"
+              Padding="0,0,0,20"
               AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
               AbsoluteLayout.LayoutFlags="All"
               BackgroundColor="White">
 
+            <!-- Today Date-->
             <Grid ColumnDefinitions="Auto,*,50" 
                   BackgroundColor="#00BFFF">
                 <Label x:Name="TodayDate" 
@@ -32,6 +34,8 @@
                        FontSize="15" FontAttributes="Bold" 
                        HorizontalTextAlignment="Center" 
                        Padding="5" />
+                
+                <!-- App name -->
                 <Label Grid.Column="1" 
                        Text="Simply To-dos" 
                        TextColor="white" 
@@ -40,12 +44,16 @@
                        FontSize="20" 
                        FontAttributes="Bold" 
                        Margin="0,0,40,0" />
-                <ImageButton Grid.Column="2" 
+
+                <!-- User Guide Button -->
+                <ImageButton x:Name="UserGuideBtn"
+                            Grid.Column="2" 
                              Source="questionmark.svg" 
                              Margin="0,0,10,0" 
-                             Clicked="ImageButton_Clicked" />
+                             Clicked="UserGuideBtn_Clicked" />
             </Grid>
 
+            <!-- Buttons to change between views -->
             <Grid ColumnDefinitions="*,*" Grid.Row="1">
                 <Button x:Name="TodosBtn" 
                         BackgroundColor="Gray" 
@@ -61,7 +69,19 @@
                         TextColor="Black" />
             </Grid>
 
-            <CollectionView Grid.Row="2" 
+            <!-- Search bar that filters the current tab's tasks live as the user types -->
+            <SearchBar Grid.Row="2"
+                       Text="{Binding SearchKeyword}"
+                       Placeholder="Search tasks..."
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       SearchIconColor="#00BFFF"
+                       PlaceholderColor="Gray"
+                       CancelButtonColor="Gray"
+                       Margin="5,0,5,0" />
+
+            <!-- Display of all tasks -->
+            <CollectionView Grid.Row="3" 
                             ItemsSource="{Binding TasksList}" 
                             EmptyView="No task to display..." 
                             ItemSizingStrategy="MeasureAllItems">
@@ -71,12 +91,7 @@
                               ColumnDefinitions="*,6*,60,60" 
                               Padding="10,0,20,0">
 
-                            <BoxView Grid.Row="2"
-                                     Grid.ColumnSpan="4"
-                                     HeightRequest="1"
-                                     Color="Black"
-                                     HorizontalOptions="Fill" />
-
+                            <!-- Checkbox to mark task as completed -->
                             <CheckBox Grid.Row="0"
                                       Grid.RowSpan="2"
                                       Grid.Column="0"
@@ -89,6 +104,7 @@
                                 </CheckBox.GestureRecognizers>
                             </CheckBox>
 
+                            <!-- Task Heading -->
                             <Label Grid.Row="0"
                                    Grid.Column="1"
                                    Text="{Binding Heading}" 
@@ -103,6 +119,8 @@
                                                           CommandParameter="{Binding .}" />
                                 </Label.GestureRecognizers>
                             </Label>
+
+                            <!-- Task Description -->
                             <Label Grid.Row="1"
                                    Grid.Column="1"
                                    Text="{Binding Description}"
@@ -163,6 +181,7 @@
                                     <RoundRectangle CornerRadius="30" />
                                 </Border.StrokeShape>
 
+                                <!-- Tick icon inside the selcection circle when the task is selected -->
                                 <Image x:Name="TickIcon"
                                        Source="tick.svg" 
                                        HeightRequest="20"
@@ -179,8 +198,15 @@
                                 </Border.GestureRecognizers>
                             </Border>
 
+                            <!--- Line break after each task -->
+                            <BoxView Grid.Row="2"
+                                     Grid.ColumnSpan="4"
+                                     HeightRequest="1"
+                                     Color="Black"
+                                     HorizontalOptions="Fill" />
+
                         </Grid>
-                        
+
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
@@ -219,7 +245,7 @@
             Margin="0,0,0,30"
             ZIndex="1"
             Command="{Binding RemoveSelectedTasksHistoryCommand}" />
-     
+
     </Grid>
 
 </ContentPage>

@@ -17,6 +17,8 @@
         </Border.StrokeShape>
 
         <VerticalStackLayout Spacing="15">
+
+            <!-- Popup title -->
             <Label x:Name="PopupHeading" 
                    FontSize="25" 
                    FontAttributes="Bold" 
@@ -26,6 +28,8 @@
 
             <Border StrokeThickness="0">
                 <VerticalStackLayout Spacing="2">
+
+                    <!-- For task heading input -->
                     <Label Text="Task Heading: " TextColor="Black" />
                     <Entry x:Name="HeadingEntry" 
                        Text="{Binding Heading}" 
@@ -42,6 +46,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- For task description input -->
             <Border StrokeThickness="0">
                 <VerticalStackLayout Spacing="2">
                     <Label Text="Task Description: " TextColor="Black" />
@@ -61,6 +66,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- For task priority input -->
             <Border StrokeThickness="0">
                 <VerticalStackLayout>
                     <Label Text="Select Priority : " TextColor="Black" />
@@ -82,12 +88,16 @@
             <HorizontalStackLayout Spacing="20" 
                                    HorizontalOptions="Center" 
                                    Margin="0,20,0,0">
+                
+                <!-- Cancel button -->
                 <Button Text="Cancel" 
                         Clicked="OnCancelClicked" 
                         BackgroundColor="LightGray" 
                         TextColor="Black" 
                         FontAttributes="Bold" 
                         WidthRequest="100" />
+                
+                <!-- Save button -->
                 <Button Text="Save" 
                         Clicked="OnSaveClicked" 
                         BackgroundColor="DodgerBlue" 
